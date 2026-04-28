@@ -6,6 +6,8 @@
     "build": "parcel build"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.29.2",
+    "jest": "^30.3.0",
     "parcel": "^2.16.4"
   }
 }
