@@ -8,6 +8,45 @@
     <title>Battleships</title>
   </head>
   <body>
-    <h1>hi</h1>
+    <div class="game-frame-center">
+      <div class="game-narrator">
+        <div>image placeholder</div>
+        <p>Hi</p>
+      </div>
+      <div class="gameboard-frame">
+        <div class="game-x-axis">
+          <div class="legend-numbers">1</div>
+          <div class="legend-numbers">2</div>
+        </div>
+        <div class="game-y-axis">
+          <div class="legend-letters">A</div>
+          <div class="legend-letters">B</div>
+        </div>
+        <main id="gameboard"></main>
+        <div class="ship-slots">
+          <div draggable="true" class="ship-slot" data-ship-length="5">
+            Carrier - 5f
+          </div>
+          <div draggable="true" class="ship-slot" data-ship-length="4">
+            Battleship - 4f
+          </div>
+          <div draggable="true" class="ship-slot" data-ship-length="3">
+            Cruiser - 3f
+          </div>
+          <div draggable="true" class="ship-slot" data-ship-length="3">
+            Submarine - 3f
+          </div>
+          <div draggable="true" class="ship-slot" data-ship-length="2">
+            Destroyer - 2f
+          </div>
+        </div>
+      </div>
+      <div class="game-menu">
+        <button>Rotate Y</button>
+        <button>Rotate X</button>
+        <button>Reset</button>
+        <button>Start</button>
+      </div>
+    </div>
   </body>
 </html>

@@ -1,0 +1,111 @@
+:root {
+  --main-color: red;
+  --game-field: #3b7597;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.game-frame-center {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.gameboard-frame {
+  background-color: red;
+  /* padding: 140px 180px 20px 60px; */
+  border-radius: 0.5rem;
+  display: grid;
+  grid-template-columns: 40px 1fr 180px;
+  grid-template-rows: 40px auto auto;
+  grid-template-areas:
+    ". game-x-axis ship-slots"
+    "game-y-axis gameboard ship-slots"
+    "game-y-axis footer ship-slots";
+}
+
+.game-narrator {
+  padding: 0 20px;
+  display: flex;
+  background-color: red;
+  width: 100%;
+  max-width: 722px;
+  border-radius: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-menu {
+  padding: 0 20px;
+  display: flex;
+  background-color: red;
+  width: 100%;
+  max-width: 722px;
+  border-radius: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-x-axis {
+  grid-area: game-x-axis;
+  display: flex;
+  gap: 20px;
+}
+
+.game-y-axis {
+  grid-area: game-y-axis;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.ship-slots {
+  grid-area: ship-slots;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ship-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
+  width: 100px;
+  height: 100px;
+  color: white;
+}
+
+#gameboard {
+  grid-area: gameboard;
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  border: 1px solid black;
+  grid-template-rows: repeat(10, 50px);
+  height: 500px;
+}
+.gameboard-field {
+  width: 100%;
+  background-color: var(--game-field);
+  border: 1px solid white;
+}
+
+.gameboard-field:hover {
+  background-color: #dff1f1;
+}
+
+.ship {
+  background-color: #dff1f1;
+}
+
+.ship-perma {
+  background-color: #dff1f1;
+}

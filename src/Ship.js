@@ -1,6 +1,5 @@
 class Ship {
   _hits = 0;
-  _isSunk = false;
   constructor(length) {
     this.length = length;
   }
@@ -10,6 +9,8 @@ class Ship {
   }
 
   isSunk() {
-    this._isSunk = this._hits >= this.length;
+    return this._hits >= this.length;
   }
 }
+
+export { Ship };
