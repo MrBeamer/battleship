@@ -82,6 +82,17 @@
   width: 100px;
   height: 100px;
   color: white;
+  cursor: pointer;
+}
+
+.ship:hover {
+  opacity: 0.8;
+  background-color: green;
+}
+
+.ship:disabled {
+  background-color: blue;
+  color: blue;
 }
 
 .ship-srpite {
@@ -104,9 +115,9 @@
   border: 1px solid white;
 }
 
-.gameboard-field:hover {
+/* .gameboard-field:hover {
   background-color: #dff1f1;
-}
+} */
 
 /* States while Drag and Drop */
 
@@ -120,4 +131,8 @@
 
 .is-dragging {
   opacity: 0.6;
+}
+
+.overlapping {
+  background-color: red;
 }

@@ -1,5 +1,3 @@
-import battleship from "url:./assets/battleship.svg";
-
 class GameView {
   currentTargetFields = [];
 
@@ -7,6 +5,7 @@ class GameView {
     this.gameBoard = document.querySelector("#gameboard");
     this.shipContainer = document.querySelector(".ship-container");
     this.ship = document.querySelector(".ship");
+    this.resetBtn = document.querySelector(".btn-reset");
   }
 
   renderGameBoardFields(coordinatesLetters, coordinatesNumbers) {
@@ -33,6 +32,14 @@ class GameView {
     //Updates current fields by hovering over them
     this.currentTargetFields = targetFields;
     return targetFields;
+  }
+
+  clearFieldHighlights() {
+    this.currentTargetFields.forEach((field) => {
+      if (!field) return;
+      field.classList.remove("preview");
+      field.classList.remove("overlapping");
+    });
   }
 }
 

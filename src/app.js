@@ -1,5 +1,5 @@
 import { GameController } from "./GameController.js";
 
-const app = new GameController();
+const game = new GameController();
 
-app.init();
+game.init();
