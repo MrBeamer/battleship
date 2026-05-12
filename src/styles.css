@@ -7,6 +7,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: crosshair;
 }
 
 .game-frame-center {
@@ -83,6 +84,7 @@
   height: 100px;
   color: white;
   cursor: pointer;
+  user-select: none;
 }
 
 .ship:hover {
@@ -113,6 +115,7 @@
   width: 100%;
   background-color: var(--game-field);
   border: 1px solid white;
+  user-select: none;
 }
 
 /* .gameboard-field:hover {
@@ -135,4 +138,10 @@
 
 .overlapping {
   background-color: red;
+  cursor: not-allowed;
+}
+
+.outOfBound {
+  background-color: red;
+  cursor: not-allowed;
 }

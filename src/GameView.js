@@ -6,6 +6,8 @@ class GameView {
     this.shipContainer = document.querySelector(".ship-container");
     this.ship = document.querySelector(".ship");
     this.resetBtn = document.querySelector(".btn-reset");
+    this.gameMenu = document.querySelector(".game-menu");
+    this.rotateBtn = document.querySelector(".btn-rotate");
   }
 
   renderGameBoardFields(coordinatesLetters, coordinatesNumbers) {
@@ -17,21 +19,48 @@ class GameView {
     }
   }
 
-  getTargetFields(targetShipCoords) {
+  setTargetFields(targetShipCoords) {
     // Searches the correct divs based on ships coordinates
     const targetFields = targetShipCoords.map((coord) => {
       for (const field of this.gameBoard.children) {
         // console.log(field.dataset.coords);
-
         if (field.dataset.coords === coord) {
-          //   console.log(field);
           return field;
         }
       }
     });
     //Updates current fields by hovering over them
     this.currentTargetFields = targetFields;
-    return targetFields;
+  }
+
+  isOverLapping(fleetPlayer1) {
+    const checkedFields = this.currentTargetFields.map((field) => {
+      if (!field) return;
+      // Checks based on placed ships and there coords if field is occupied already
+      return fleetPlayer1.some((ship) =>
+        ship.position.includes(field.dataset.coords),
+      );
+    });
+    // Checks the if any of the tested fields is not true
+    return checkedFields.some((field) => field === true);
+  }
+
+  isOutOfBound() {
+    let isOutOfBound = this.currentTargetFields.some(
+      (field) => field === undefined,
+    );
+    return isOutOfBound;
+  }
+
+  highlightTargetFields(isOverLapping, isOutOfBound) {
+    this.currentTargetFields.forEach((field) => {
+      if (!field) return;
+      if (isOutOfBound) return field.classList.add("outOfBound");
+      if (isOverLapping) field.classList.add("overlapping");
+      else {
+        field.classList.add("preview");
+      }
+    });
   }
 
   clearFieldHighlights() {
@@ -39,6 +68,7 @@ class GameView {
       if (!field) return;
       field.classList.remove("preview");
       field.classList.remove("overlapping");
+      field.classList.remove("outOfBound");
     });
   }
 }

@@ -1,11 +1,14 @@
 import { Gameboard } from "./Gameboard.js";
 import { GameView } from "./GameView.js";
 import { Ship } from "./Ship.js";
+
 class GameController {
   view = new GameView();
   gameBoard = new Gameboard();
   selectedShip = null;
   selectedShipPosition = null;
+  shipPlacementPhase = null;
+  shipAxis = "X";
   constructor() {
     // For hover, preselect phase
     this.view.gameBoard.addEventListener("pointerover", (event) =>
@@ -27,6 +30,17 @@ class GameController {
     this.view.resetBtn.addEventListener("click", (event) => {
       this.reset(event);
     });
+
+    this.view.gameMenu.addEventListener("click", (event) => {
+      this.rotateShip(event);
+    });
+  }
+
+  rotateShip(event) {
+    const rotateBtn = event.target.closest(".btn-rotate");
+    if (!rotateBtn) return;
+    this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
+    this.view.rotateBtn.textContent = `Rotate Ship to ${this.shipAxis === "Y" ? "X" : "Y"}`;
   }
 
   handleSelectShip(event) {
@@ -41,18 +55,28 @@ class GameController {
     const gameField = event.target.closest(".gameboard-field");
     if (!gameField) return;
 
+    // Checks if ship would overlap
+    const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
+    if (isOverLapping) return;
+    // Check if ship would be outOfBound
+    const isOutOfBound = this.view.isOutOfBound();
+    if (isOutOfBound) return;
+
     // Get currentTargetFields (html elements) and add highlight them permanently
-    this.view.currentTargetFields.forEach((element, index) => {
-      if (!element) return;
-      element.classList.add("placed");
+    this.view.currentTargetFields.forEach((field) => {
+      if (!field) return;
+      field.classList.add("placed");
     });
 
+    // If a ship is selected create an ship object and push into the fleetPlayer1 array
     if (!this.selectedShip) return;
+
     // Based on placed ship, create a new ship object
     const ship = new Ship(
       this.selectedShip.dataset.shipLength,
       this.selectedShip.dataset.shipType,
       this.selectedShipPosition,
+      this.shipAxis,
     );
     // Add ship to gameBoard (fleetPlayer1 array) - data
     this.gameBoard.placeShip(ship);
@@ -60,6 +84,9 @@ class GameController {
     console.log(this.gameBoard.fleetPlayer1);
     // If ship is placed on the board, this make is impossible to pick the same ship again
     this.selectedShip.disabled = true;
+    // After placing ship, remove selected ship from the current state
+    this.selectedShip = null;
+    this.selectedShipPosition = null;
   }
 
   handlePointeOver(event) {
@@ -73,36 +100,22 @@ class GameController {
     const selectedShipCoords = this.gameBoard.getTempShipCoords(
       gameField,
       this.selectedShip.dataset.shipLength,
+      this.shipAxis,
     );
     this.selectedShipPosition = selectedShipCoords;
     // Gets the hoovered or locked in html of the fields
-    const targetFields = this.view.getTargetFields(selectedShipCoords);
-    console.log(targetFields);
-    // Add class that highlights divs for potential ship placement
-    targetFields.forEach((element) => {
-      if (!element) return;
-      console.log(element.dataset.coords);
-      // Checks based on placed ships and there coords if field is occupied already
-      const isOverlapping = this.gameBoard.fleetPlayer1.some((ship) =>
-        ship.position.includes(element.dataset.coords),
-      );
-      isShipOverLapping;
-      console.log(isOverlapping);
-      if (isOverlapping) element.classList.add("overlapping");
-      else {
-        element.classList.add("preview");
-      }
-    });
+    // I think returning targetfields can be removed and maybe rename the function to set instead of get?
+    this.view.setTargetFields(selectedShipCoords);
+    // Check if any ships is about to overlap or outOfBound, if so return true
+    const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
+    const isOutOfBound = this.view.isOutOfBound();
+    // Add class that highlights divs for potential ship placements
+    this.view.highlightTargetFields(isOverLapping, isOutOfBound);
   }
 
   handlePointerOut() {
     // Remove class that highlights divs for ship placement preview
-
-    this.view.currentTargetFields.forEach((element) => {
-      if (!element) return;
-      element.classList.remove("preview");
-      element.classList.remove("overlapping");
-    });
+    this.view.clearFieldHighlights();
   }
 
   ///////////////////////////////
@@ -132,11 +145,6 @@ class GameController {
 }
 
 export { GameController };
-// Saturday
-// Add Reset
-// After ship placed on the gameboard, lock the ship from selection
-// moved selectedShipPosition from gameboard to controller
-
 // next i have to iterate over every ship in playerFleet 1 and get the coordinates if any coordinate matches
 // return true (isOverlapping) and add hover effect red and disable placement for an ship on this field
 // Sunday
@@ -144,3 +152,9 @@ export { GameController };
 //      Moved remove classes functions in the view
 //      Moved add classes functions in the view
 //      Moved isOverLapping function in the view
+// Monday
+//  refactored isOverLapping and highlight in the view
+//  add blocking of placing a ship on occupied position
+
+// Tuesday
+//  Add x and y axis highlight outOfBound,  x and y axis placement block by outOfBound, rotation x to y and back to x and place ship then based on rotated  axis

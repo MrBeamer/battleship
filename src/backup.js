@@ -99,7 +99,7 @@ handleAddClass(event) {
     });
   }
 
-   handlePointerUp(event) {
+  //  handlePointerUp(event) {
     // // // gets ships placement coordinates
     // const gameField = event.target.closest(".gameboard-field");
     // if (!gameField) return;
@@ -133,4 +133,98 @@ handleAddClass(event) {
     // });
     // After Ship is dropped, get Permanent Ship Coords from the board
     // this.gameBoard.getPermShipCoords(gameField);
+  // }
+
+      // targetFields.forEach((element) => {
+    //   if (!element) return;
+    //   console.log(element.dataset.coords);
+    //   // Checks based on placed ships and there coords if field is occupied already
+    //   const isOverlapping = this.gameBoard.fleetPlayer1.some((ship) =>
+    //     ship.position.includes(element.dataset.coords),
+    //   );
+    //   console.log(isOverlapping);
+    //   if (isOverlapping) element.classList.add("overlapping");
+    //   else {
+    //     element.classList.add("preview");
+    //   }
+    // });
+
+      // highlightTargetFields(fleetPlayer1) {
+  //   this.currentTargetFields.forEach((field) => {
+  //     if (!field) return;
+  //     // Checks based on placed ships and there coords if field is occupied already
+  //     const isOverLapping = fleetPlayer1.some((ship) =>
+  //       ship.position.includes(field.dataset.coords),
+  //     );
+  //     if (isOverLapping) field.classList.add("overlapping");
+  //     else {
+  //       field.classList.add("preview");
+  //     }
+  //   });
+  // }
+
+    worksgetTempShipCoords(gameField, shipLength, shipAxis) {
+
+    if(shipAxis === "X")
+    let tempShipCoords = [];
+    for (let i = 0; i < shipLength; i++) {
+      let coordX = i + parseInt(gameField.dataset.coordX);
+      let coordY = gameField.dataset.coordY;
+      // This checks if coordinate is within the gameBoard
+      if (coordX > 10) coordX = undefined;
+      // This checks if coordinate is within the gameBoard
+      if (coordY > 10) coordX = undefined;
+      const coords = coordY + coordX;
+      console.log(`Coord Y: ${coordY}`);
+      console.log(`Coord X: ${coordX}`);
+      tempShipCoords.push(coords);
+    }
+    // console.log(gameField);
+    // console.log(gameField.dataset["coordX"]);
+    // console.log(gameField.dataset["coordY"]);
+    // console.log(tempShipCoords);
+    return tempShipCoords;
   }
+
+  // y
+  xxgetTempShipCoords(gameField, shipLength) {
+    let tempShipCoords = [];
+    for (let i = 0; i < shipLength; i++) {
+      let coordX = parseInt(gameField.dataset.coordX);
+      let coordY = gameField.dataset.coordY;
+      // Turns letter into charCode to then increase the code to get next letter from the board, then transform code back to string
+      coordY = String.fromCharCode(i + coordY.charCodeAt(0));
+      // This checks if coordinate is within the gameBoard
+      if (coordX > 10) coordX = undefined;
+      // This checks if coordinate is within the gameBoard
+      if (coordY > 10) coordX = undefined;
+      const coords = coordY + coordX;
+
+      tempShipCoords.push(coords);
+    }
+    // console.log(gameField);
+    // console.log(gameField.dataset["coordX"]);
+    // console.log(gameField.dataset["coordY"]);
+    console.log(tempShipCoords);
+    return tempShipCoords;
+  }
+
+  //Horizontal
+/// carrier (5f) fits only starting on 1 or 6
+//Vertical
+/// carrier (5f) fits only starting on A or F
+
+//Horizontal
+/// batttleship (4f) fits  between on 1 and  7
+//Vertical
+/// batttleship (4f) fits between on A and G
+
+//Horizontal
+/// cruiser and submarine (3f) fits  between on 1 and  8
+//Vertical
+/// cruiser and submarine (3f) fits between on A and H
+
+//Horizontal
+/// cruiser and submarine (3f) fits  between on 1 and  9
+//Vertical
+/// cruiser and submarine (3f) fits between on A and I
