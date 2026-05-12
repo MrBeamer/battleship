@@ -1,15 +1,17 @@
 {
   "name": "battleships",
   "source": "src/index.html",
+  "homepage": "https://mrbeamer.github.io/battleship/",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build",
+    "build": "parcel build --public-url ./",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "test": "jest"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.29.2",
+    "gh-pages": "^6.3.0",
     "jest": "^30.3.0",
     "parcel": "^2.16.4"
   }

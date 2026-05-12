@@ -145,16 +145,3 @@ class GameController {
 }
 
 export { GameController };
-// next i have to iterate over every ship in playerFleet 1 and get the coordinates if any coordinate matches
-// return true (isOverlapping) and add hover effect red and disable placement for an ship on this field
-// Sunday
-//  Refactoring
-//      Moved remove classes functions in the view
-//      Moved add classes functions in the view
-//      Moved isOverLapping function in the view
-// Monday
-//  refactored isOverLapping and highlight in the view
-//  add blocking of placing a ship on occupied position
-
-// Tuesday
-//  Add x and y axis highlight outOfBound,  x and y axis placement block by outOfBound, rotation x to y and back to x and place ship then based on rotated  axis
