@@ -71,7 +71,7 @@ class GameController {
     // If a ship is selected create an ship object and push into the fleetPlayer1 array
     if (!this.selectedShip) return;
 
-    // Based on placed ship, create a new ship object
+    // Based on placed ship, create a new ship object.
     const ship = new Ship(
       this.selectedShip.dataset.shipLength,
       this.selectedShip.dataset.shipType,
