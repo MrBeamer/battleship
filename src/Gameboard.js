@@ -32,16 +32,17 @@ class Gameboard {
     this.fleetPlayer1.push(ship);
   }
 
-  getCoordinatesLetters(index) {
-    const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
-    let calcIndex = Math.floor((index - 1) / 10);
-    return letters[calcIndex];
-  }
+  //moved
+  // getCoordinatesLetters(index) {
+  //   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+  //   let calcIndex = Math.floor((index - 1) / 10);
+  //   return letters[calcIndex];
+  // }
 
-  getCoordinatesNumbers(index) {
-    if (index % 10 === 0) return 10;
-    else return index % 10;
-  }
+  // getCoordinatesNumbers(index) {
+  //   if (index % 10 === 0) return 10;
+  //   else return index % 10;
+  // }
 }
 
 export { Gameboard };

@@ -31,16 +31,33 @@ class GameController {
       this.reset(event);
     });
 
-    this.view.gameMenu.addEventListener("click", (event) => {
+    this.view.rotateBtn.addEventListener("click", (event) => {
       this.rotateShip(event);
     });
+
+    this.view.startBtn.addEventListener("click", (event) => {
+      this.startGame(event);
+    });
+  }
+
+  startGame() {
+    console.log("start");
+    this.view.shipContainer.classList.add("hidden");
+    this.view.gameMenu.classList.add("hidden");
+    this.view.gameNarrator.classList.add("hidden");
+    //Renders the Gameboard with coordinates as Data-Attribute
+    this.view.renderGameBoard(this.view.gameBoardNpc);
+    // Remove hidden class from gameBoard-npc
+    this.view.gameBoardFrameNpc.classList.remove("hidden");
+    // Add align-boards to align the boards
+    this.view.gameBoardsContainer.classList.add("align-boards");
   }
 
   rotateShip(event) {
     const rotateBtn = event.target.closest(".btn-rotate");
     if (!rotateBtn) return;
     this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
-    this.view.rotateBtn.textContent = `Rotate Ship to ${this.shipAxis === "Y" ? "X" : "Y"}`;
+    this.view.rotateBtn.textContent = `Rotate Ship (${this.shipAxis === "Y" ? "X" : "Y"})`;
   }
 
   handleSelectShip(event) {
@@ -82,10 +99,15 @@ class GameController {
     this.gameBoard.placeShip(ship);
     console.log(ship);
     console.log(this.gameBoard.fleetPlayer1);
-    // If ship is placed on the board, this make is impossible to pick the same ship again
+
+    // If ship is placed on the board, disable the ship button, so user can not pick it again
     this.selectedShip.disabled = true;
-    // After placing ship, remove selected ship from the current state
+    //Hide ship unit
+    this.view.shipUnitContainer.style.visibility = "hidden";
+
+    // After placing ship, remove selected ship from the temp memory state
     this.selectedShip = null;
+    // After placing ship, remove position from the temp memory state
     this.selectedShipPosition = null;
   }
 
@@ -121,11 +143,11 @@ class GameController {
   ///////////////////////////////
   init() {
     console.log("Init App");
-    //Renders the Gameboard with coordinates as Data-Attribute
-    this.view.renderGameBoardFields(
-      this.gameBoard.getCoordinatesLetters,
-      this.gameBoard.getCoordinatesNumbers,
-    );
+    //Renders the Gameboard with axis, coordinates as Data-Attribute
+    this.view.renderGameBoard(this.view.gameBoard);
+
+    //Type narrator message
+    this.view.renderNarratorMessage();
   }
 
   reset() {
@@ -133,6 +155,8 @@ class GameController {
     this.selectedShip = null;
     this.selectedShipPosition = null;
     this.gameBoard.fleetPlayer1 = [];
+    // remove the temp highlighted fields from the temp memory state
+    this.view.currentTargetFields = [];
     //Remove disable from all ships
     for (let ship of this.view.shipContainer.children) {
       ship.disabled = false;
@@ -141,7 +165,16 @@ class GameController {
     for (let gameField of this.view.gameBoard.children) {
       gameField.classList.remove("placed");
     }
+    const clickSound = new Audio("path/to/sound.mp3");
+    clickSound.play();
   }
 }
 
 export { GameController };
+// created render for x and y axis, style game selection screen that every is aligned
+//Based on the image (Ignore the text on the field squares), that I shared, create a layout, for space battleship game 8bit style (also color palette), do not add other elements which are not existing on the image layout.  Use a background like shared in the second image.
+
+//Moved and refactored methods frome the class gameBoard into the view, to create one renderGameBoard which renders the the complete board instead of using 3 sepered functions to render the board, also reworkred the design of the ship placement phase and added groundwork for the second screen the actual game/ battle phase created a second gameboard the enemy, add the that start switches to this second screen.
+
+// After workout
+// need to write a line of code that lets only start the game if the fleetPlayer one array has a length of 5 which means every ship is placed.

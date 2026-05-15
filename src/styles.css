@@ -1,13 +1,24 @@
 :root {
-  --main-color: red;
-  --game-field: #3b7597;
+  --gameboard-frame-player: rgba(15, 30, 90, 0.35);
+  --game-field: rgba(8, 25, 70, 0.65);
+  --game-topbar: rgba(15, 30, 90, 0.4);
+  --game-menu: rgba(15, 30, 90, 0.4);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: crosshair;
+
+  font-family: "Fredoka", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+body {
+  background-image: url("./public/space_bg.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .game-frame-center {
@@ -20,81 +31,253 @@
   gap: 10px;
 }
 
-.gameboard-frame {
-  background-color: red;
-  /* padding: 140px 180px 20px 60px; */
+/* GameBoard Frame Player */
+.gameboard-frame-player {
+  background-color: var(--gameboard-frame-player);
+  height: 597px;
+
   border-radius: 0.5rem;
   display: grid;
-  grid-template-columns: 40px 1fr 180px;
-  grid-template-rows: 40px auto auto;
+  grid-template-columns: auto 1fr auto;
+  /* grid-template-columns: auto 1fr 180px; */
+  grid-template-rows: auto auto auto;
   grid-template-areas:
-    ". game-x-axis ship-container"
-    "game-y-axis gameboard ship-container"
-    "game-y-axis footer ship-container";
+    ". game-x-axis-player ship-container"
+    "game-y-axis-player gameboard-player ship-container"
+    "game-y-axis-player footer ship-container";
+  padding-bottom: 10px;
+  padding-top: 15px;
+  padding-right: 20px;
+  border-color: rgba(100, 160, 255, 0.35);
 }
 
-.game-narrator {
-  padding: 0 20px;
+.game-x-axis-player {
+  grid-area: game-x-axis-player;
   display: flex;
-  background-color: red;
-  width: 100%;
-  max-width: 722px;
-  border-radius: 0.5rem;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  user-select: none;
+  color: #ff9f1c;
 }
 
+.game-y-axis-player {
+  grid-area: game-y-axis-player;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-right: 12px;
+  padding-left: 19px;
+  margin-bottom: 15px;
+  user-select: none;
+  color: #ff9f1c;
+}
+
+/* GameBoard Frame Npc */
+
+.gameboard-frame-npc {
+  background-color: var(--gameboard-frame-player);
+  height: 597px;
+
+  border-radius: 0.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    ".                gameXaxisNpc"
+    "gameYaxisNpc     gameboardNpc"
+    "gameYaxisNpc     .";
+  padding-bottom: 10px;
+  padding-top: 15px;
+  padding-right: 20px;
+  border-color: rgba(100, 160, 255, 0.35);
+}
+
+.game-x-axis-npc {
+  grid-area: gameXaxisNpc;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  user-select: none;
+  color: #ff9f1c;
+}
+
+.game-y-axis-npc {
+  grid-area: gameYaxisNpc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding-right: 12px;
+  padding-left: 19px;
+  margin-bottom: 15px;
+  user-select: none;
+  color: #ff9f1c;
+}
+
+/* Narrator */
+.game-narrator {
+  padding: 20px;
+  display: flex;
+  background-color: var(--game-topbar);
+  border: 1px solid rgba(240, 168, 0, 0.35);
+  width: 100%;
+  height: auto;
+  max-width: 775px;
+  border-radius: 0.5rem;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.narrator-img {
+  height: 45px;
+  margin-right: 10px;
+}
+
+.narrator-message {
+  line-height: 1.4;
+  font-weight: 500;
+  color: #c8e8ff;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* Game Menu */
 .game-menu {
   padding: 0 20px;
   display: flex;
-  background-color: red;
+  background-color: var(--game-menu);
   width: 100%;
-  max-width: 722px;
+  height: 89px;
+  max-width: 775px;
   border-radius: 0.5rem;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 }
 
-.game-x-axis {
-  grid-area: game-x-axis;
-  display: flex;
-  gap: 20px;
+/* Buttons */
+
+.btn-reset {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #c8e8ff;
 }
 
-.game-y-axis {
-  grid-area: game-y-axis;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.btn-start {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #002a00;
+  border-color: #00aa33;
+  color: #00ff66;
 }
+
+.btn-rotate {
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #c8e8ff;
+}
+/* Fleet Selection */
+
 .ship-container {
   grid-area: ship-container;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  padding: 20px 40px;
 }
 
+/* Ship */
+
 .ship {
+  border: none;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: blue;
-  width: 100px;
+  background-color: rgba(20, 40, 110, 0.5);
+  width: 115px;
   height: 100px;
   color: white;
   cursor: pointer;
   user-select: none;
+  border-radius: 0.5rem;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(60, 100, 200, 0.35);
 }
 
+.ship-unit-container {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+.ship-unit {
+  width: 14px;
+  height: 12px;
+}
+
+.ship-unit-dreadnought {
+  background-color: rgba(180, 80, 0, 0.38);
+  border: 0.5px solid #f0a800;
+}
+
+.ship-unit-cruiser {
+  background-color: rgba(0, 35, 50, 0.92);
+  border: 0.5px solid #00ccdd;
+}
+
+.ship-unit-destroyer {
+  background-color: rgba(0, 35, 10, 0.92);
+  border: 0.5px solid #00cc55;
+}
+
+.ship-unit-frigate {
+  background-color: rgba(25, 5, 50, 0.92);
+  border: 0.5px solid #9933ff;
+}
+
+.ship-unit-corvette {
+  background-color: #8a1000;
+  border: 0.5px solid #ff4433;
+}
+
+/* Shp States */
+
 .ship:hover {
-  opacity: 0.8;
-  background-color: green;
+  background-color: rgba(10, 40, 100, 0.9);
+}
+
+.ship:active {
+  background-color: rgba(10, 40, 100, 0.9);
+  transform: scale(0.97);
+}
+
+/* needs to be added, so button stays like that */
+.ship.selected {
+  background-color: rgba(30, 70, 140, 1);
+  border: 2px solid #8ec5ff;
 }
 
 .ship:disabled {
-  background-color: blue;
-  color: blue;
+  background-color: transparent;
+  color: transparent;
+}
+
+.ship:disabled:hover {
+  background-color: transparent;
+  color: transparent;
 }
 
 .ship-srpite {
@@ -103,45 +286,78 @@
   width: 100%;
 }
 
-#gameboard {
-  grid-area: gameboard;
+/* Gameboard Container */
+
+.gameboards-container {
+}
+.align-boards {
+  display: flex;
+  gap: 50px;
+}
+
+/* GameBoard Player */
+
+#gameboard-player {
+  grid-area: gameboard-player;
   display: grid;
   grid-template-columns: repeat(10, 50px);
-  border: 1px solid black;
+  /* border: 2px solid #1a4a8a; */
   grid-template-rows: repeat(10, 50px);
   height: 500px;
+  gap: 2px;
 }
+
+/* GameBoard Npc */
+
+#gameboard-npc {
+  grid-area: gameboardNpc;
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  /* border: 2px solid #1a4a8a; */
+  grid-template-rows: repeat(10, 50px);
+  height: 500px;
+  gap: 2px;
+}
+
+/* .gameboard-field:nth-child(odd) {
+  background-color: rgba(5, 20, 60, 0.7);
+}
+
+.gameboard-field:nth-child(even) {
+  background-color: rgba(8, 25, 70, 0.65);
+} */
+
 .gameboard-field {
   width: 100%;
   background-color: var(--game-field);
-  border: 1px solid white;
+  border: 1px solid #0d2a60;
   user-select: none;
+  cursor: crosshair;
 }
 
-/* .gameboard-field:hover {
-  background-color: #dff1f1;
-} */
-
-/* States while Drag and Drop */
+/* Selection States of Ship placement */
 
 .preview {
-  background-color: #dff1f1;
+  background-color: rgba(30, 80, 180, 0.45);
+  border-color: #3a8aff;
 }
 
 .placed {
   background-color: #dff1f1;
 }
 
-.is-dragging {
-  opacity: 0.6;
-}
-
 .overlapping {
-  background-color: red;
+  background-color: rgba(200, 30, 30, 0.45);
+  border-color: #ff4444;
   cursor: not-allowed;
 }
 
 .outOfBound {
-  background-color: red;
+  background-color: rgba(200, 30, 30, 0.45);
+  border-color: #ff4444;
   cursor: not-allowed;
+}
+
+.hidden {
+  display: none;
 }

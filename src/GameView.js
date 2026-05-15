@@ -1,22 +1,103 @@
+import Typewriter from "typewriter-effect/dist/core";
+
 class GameView {
   currentTargetFields = [];
 
   constructor() {
-    this.gameBoard = document.querySelector("#gameboard");
+    this.gameBoard = document.querySelector("#gameboard-player");
+    this.gameBoardNpc = document.querySelector("#gameboard-npc");
     this.shipContainer = document.querySelector(".ship-container");
     this.ship = document.querySelector(".ship");
     this.resetBtn = document.querySelector(".btn-reset");
     this.gameMenu = document.querySelector(".game-menu");
     this.rotateBtn = document.querySelector(".btn-rotate");
+    this.startBtn = document.querySelector(".btn-start");
+    this.gameAxisY = document.querySelector(".game-y-axis-player");
+    this.gameAxisX = document.querySelector(".game-x-axis-player");
+    this.gameAxisYnpc = document.querySelector(".game-y-axis-npc");
+    this.gameAxisXnpc = document.querySelector(".game-x-axis-npc");
+    this.gameNarrator = document.querySelector(".game-narrator");
+    this.shipUnitContainer = document.querySelector(".ship-unit-container");
+    this.narratorMessage = document.querySelector(".narrator-message");
+    this.gameBoardFrameNpc = document.querySelector(".gameboard-frame-npc");
+    this.gameBoardsContainer = document.querySelector(".gameboards-container");
   }
 
-  renderGameBoardFields(coordinatesLetters, coordinatesNumbers) {
+  renderGameBoard(gameBoard) {
+    // Get ID from gameBoard conditionally rendering the axis for npc or player
+    const gameBoardId = gameBoard.id;
+    //Renders the Y axis of the gameBoard
+    const renderAxisY = () => {
+      console.log(gameBoardId);
+      const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+      const axisY =
+        gameBoardId === "gameboard-player" ? this.gameAxisY : this.gameAxisYnpc;
+      for (let letter of alphabet) {
+        const htmlElement = `<div class="legend-letters">${letter}</div>`;
+        axisY.insertAdjacentHTML("beforeend", htmlElement);
+      }
+    };
+    //Renders the X axis of the gameBoard
+    const renderAxisX = () => {
+      const numbers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+      const axisX =
+        gameBoardId === "gameboard-player" ? this.gameAxisX : this.gameAxisXnpc;
+      for (let number of numbers) {
+        const htmlElement = `<div class="legend-numbers">${number}</div>`;
+        axisX.insertAdjacentHTML("beforeend", htmlElement);
+      }
+    };
+    // Calls the functions here because the will not be called anywhere
+    renderAxisX();
+    renderAxisY();
+
+    // Generates the letters used to create the letters for GameBoard
+    const getCoordinatesLetters = (index) => {
+      const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
+      let calcIndex = Math.floor((index - 1) / 10);
+      return letters[calcIndex];
+    };
+    // Generates the numbers used to create the numbers for GameBoard
+    const getCoordinatesNumbers = (index) => {
+      if (index % 10 === 0) return 10;
+      else return index % 10;
+    };
+    // Injects the created fields into the GameBoard Container
     for (let i = 1; i <= 100; i++) {
-      this.gameBoard.insertAdjacentHTML(
+      gameBoard.insertAdjacentHTML(
         "beforeend",
-        `<div class="gameboard-field" data-coord-x="${coordinatesNumbers(i)}" data-coord-y="${coordinatesLetters(i)}" data-coords="${coordinatesLetters(i)}${coordinatesNumbers(i)}">${coordinatesLetters(i)}-${coordinatesNumbers(i)}</div>`,
+        `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}">${getCoordinatesLetters(i)}-${getCoordinatesNumbers(i)}</div>`,
       );
     }
+  }
+
+  //   renderGameBoardFields(coordinatesLetters, coordinatesNumbers) {
+  //   for (let i = 1; i <= 100; i++) {
+  //     this.gameBoard.insertAdjacentHTML(
+  //       "beforeend",
+  //       `<div class="gameboard-field" data-coord-x="${coordinatesNumbers(i)}" data-coord-y="${coordinatesLetters(i)}" data-coords="${coordinatesLetters(i)}${coordinatesNumbers(i)}">${coordinatesLetters(i)}-${coordinatesNumbers(i)}</div>`,
+  //     );
+  //   }
+  // }
+
+  renderNarratorMessage() {
+    // const test = new Typewriter(".narrator-message", {
+    //   strings: [
+    //     "Hi Captain Pengu!",
+    //     "Click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
+    //   ],
+    //   autoStart: true,
+    //   loop: false,
+    //   delay: 40,
+    // });
+
+    new Typewriter(".narrator-message", {
+      strings:
+        "Click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
+      autoStart: true,
+      loop: false,
+      delay: 30,
+    });
   }
 
   setTargetFields(targetShipCoords) {
