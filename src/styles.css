@@ -295,6 +295,64 @@ body {
   gap: 50px;
 }
 
+/* Battle Screen */
+
+/* Player Side */
+
+.player-side-title {
+  color: #c8e8ff;
+  background-color: rgba(15, 30, 90, 0.35);
+  padding: 15px 0 0 15px;
+}
+
+.player-narrator {
+  padding: 20px;
+  display: flex;
+  background-color: var(--game-topbar);
+  border: 1px solid rgba(240, 168, 0, 0.35);
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.player-narrator-message {
+  line-height: 1.4;
+  font-weight: 500;
+  color: #c8e8ff;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* Npc Side */
+
+.npc-side-title {
+  color: #f0a800;
+  background-color: rgba(15, 30, 90, 0.35);
+  padding: 15px 0 0 15px;
+}
+
+.npc-narrator {
+  padding: 20px;
+  display: flex;
+  background-color: var(--game-topbar);
+  border: 1px solid rgba(240, 168, 0, 0.35);
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.npc-narrator-message {
+  line-height: 1.4;
+  font-weight: 500;
+  color: #c8e8ff;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
 /* GameBoard Player */
 
 #gameboard-player {

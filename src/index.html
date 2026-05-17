@@ -19,7 +19,7 @@
         <div class="narrator-img-container">
           <img
             class="narrator-img"
-            src="./public/narrator.png"
+            src="./public/player_narrator.png"
             alt="anime captain woman"
           />
         </div>
@@ -29,89 +29,118 @@
         </p>
       </div>
       <div class="gameboards-container">
-        <div class="gameboard-frame-player">
-          <div class="game-x-axis-player"></div>
-          <div class="game-y-axis-player"></div>
-          <main id="gameboard-player"></main>
-          <div class="ship-container">
-            <button
-              class="ship"
-              data-ship-length="5"
-              data-ship-type="dreadnought"
-              data-ship-direction="horizontal"
-              data-ship-sprite="img placeholder"
-            >
-              <p class="ship-unit-name">Dreadnought</p>
-              <div class="ship-unit-container">
-                <div class="ship-unit ship-unit-dreadnought"></div>
-                <div class="ship-unit ship-unit-dreadnought"></div>
-                <div class="ship-unit ship-unit-dreadnought"></div>
-                <div class="ship-unit ship-unit-dreadnought"></div>
-                <div class="ship-unit ship-unit-dreadnought"></div>
-              </div>
-            </button>
-            <button
-              class="ship"
-              data-ship-length="4"
-              data-ship-type="cruiser"
-              data-ship-direction="horizontal"
-              data-ship-sprite="img placeholder"
-            >
-              <p class="ship-unit-name">Cruiser</p>
-              <div class="ship-unit-container">
-                <div class="ship-unit ship-unit-cruiser"></div>
-                <div class="ship-unit ship-unit-cruiser"></div>
-                <div class="ship-unit ship-unit-cruiser"></div>
-                <div class="ship-unit ship-unit-cruiser"></div>
-              </div>
-            </button>
-            <button
-              class="ship"
-              data-ship-length="3"
-              data-ship-type="destroyer"
-              data-ship-direction="horizontal"
-              data-ship-sprite="img placeholder"
-            >
-              <p class="ship-unit-name">Destroyer</p>
-              <div class="ship-unit-container">
-                <div class="ship-unit ship-unit-destroyer"></div>
-                <div class="ship-unit ship-unit-destroyer"></div>
-                <div class="ship-unit ship-unit-destroyer"></div>
-              </div>
-            </button>
-            <button
-              class="ship"
-              data-ship-length="3"
-              data-ship-type="frigate"
-              data-ship-direction="horizontal"
-              data-ship-sprite="img placeholder"
-            >
-              <p class="ship-unit-name">Frigate</p>
-              <div class="ship-unit-container">
-                <div class="ship-unit ship-unit-frigate"></div>
-                <div class="ship-unit ship-unit-frigate"></div>
-                <div class="ship-unit ship-unit-frigate"></div>
-              </div>
-            </button>
-            <button
-              class="ship"
-              data-ship-length="2"
-              data-ship-type="corvette"
-              data-ship-direction="horizontal"
-              data-ship-sprite="img placeholder"
-            >
-              <p class="ship-unit-name">Corvette</p>
-              <div class="ship-unit-container">
-                <div class="ship-unit ship-unit-corvette"></div>
-                <div class="ship-unit ship-unit-corvette"></div>
-              </div>
-            </button>
+        <div class="player-side">
+          <h2 class="player-side-title hidden">Friendly Space</h2>
+          <div class="gameboard-frame-player">
+            <div class="game-x-axis-player"></div>
+            <div class="game-y-axis-player"></div>
+            <main id="gameboard-player"></main>
+
+            <div class="ship-container">
+              <button
+                class="ship"
+                data-ship-length="5"
+                data-ship-type="dreadnought"
+                data-ship-direction="horizontal"
+                data-ship-sprite="img placeholder"
+              >
+                <p class="ship-unit-name">Dreadnought</p>
+                <div class="ship-unit-container">
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                </div>
+              </button>
+              <button
+                class="ship"
+                data-ship-length="4"
+                data-ship-type="cruiser"
+                data-ship-direction="horizontal"
+                data-ship-sprite="img placeholder"
+              >
+                <p class="ship-unit-name">Cruiser</p>
+                <div class="ship-unit-container">
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                </div>
+              </button>
+              <button
+                class="ship"
+                data-ship-length="3"
+                data-ship-type="destroyer"
+                data-ship-direction="horizontal"
+                data-ship-sprite="img placeholder"
+              >
+                <p class="ship-unit-name">Destroyer</p>
+                <div class="ship-unit-container">
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                </div>
+              </button>
+              <button
+                class="ship"
+                data-ship-length="3"
+                data-ship-type="frigate"
+                data-ship-direction="horizontal"
+                data-ship-sprite="img placeholder"
+              >
+                <p class="ship-unit-name">Frigate</p>
+                <div class="ship-unit-container">
+                  <div class="ship-unit ship-unit-frigate"></div>
+                  <div class="ship-unit ship-unit-frigate"></div>
+                  <div class="ship-unit ship-unit-frigate"></div>
+                </div>
+              </button>
+              <button
+                class="ship"
+                data-ship-length="2"
+                data-ship-type="corvette"
+                data-ship-direction="horizontal"
+                data-ship-sprite="img placeholder"
+              >
+                <p class="ship-unit-name">Corvette</p>
+                <div class="ship-unit-container">
+                  <div class="ship-unit ship-unit-corvette"></div>
+                  <div class="ship-unit ship-unit-corvette"></div>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div class="player-narrator hidden">
+            <div class="narrator-img-container">
+              <img
+                class="narrator-img"
+                src="./public/player_narrator.png"
+                alt="anime captain woman"
+              />
+            </div>
+            <p class="player-narrator-message">Here to save the universe!</p>
           </div>
         </div>
-        <div class="gameboard-frame-npc hidden">
-          <div class="game-x-axis-npc"></div>
-          <div class="game-y-axis-npc"></div>
-          <main id="gameboard-npc"></main>
+        <div class="npc-side hidden">
+          <h2 class="npc-side-title">Enemy Space</h2>
+          <div class="gameboard-frame-npc hidden">
+            <div class="game-x-axis-npc"></div>
+            <div class="game-y-axis-npc"></div>
+            <main id="gameboard-npc"></main>
+          </div>
+          <div class="npc-narrator hidden">
+            <div class="narrator-img-container">
+              <img
+                class="narrator-img"
+                src="./public/npc_narrator.png"
+                alt="anime captain woman"
+              />
+            </div>
+            <p class="npc-narrator-message">
+              Muahaha I will destroy all your Ships.
+            </p>
+          </div>
         </div>
       </div>
       <div class="game-menu">

@@ -1,6 +1,6 @@
 class Gameboard {
   fleetPlayer1 = [];
-  fleetPlayer2 = [];
+  fleetNpc = [];
   constructor() {}
   // gets ships placement coordinates, where you hover over depending on length of the ship 1-3 fields from where the pointer is, switches between X and Y placement
   getTempShipCoords(gameField, shipLength, shipAxis) {
@@ -31,18 +31,6 @@ class Gameboard {
     // add later logic if players 1 turn put into fleet1 and vice versa
     this.fleetPlayer1.push(ship);
   }
-
-  //moved
-  // getCoordinatesLetters(index) {
-  //   const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
-  //   let calcIndex = Math.floor((index - 1) / 10);
-  //   return letters[calcIndex];
-  // }
-
-  // getCoordinatesNumbers(index) {
-  //   if (index % 10 === 0) return 10;
-  //   else return index % 10;
-  // }
 }
 
 export { Gameboard };

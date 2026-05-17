@@ -17,10 +17,14 @@ class GameView {
     this.gameAxisYnpc = document.querySelector(".game-y-axis-npc");
     this.gameAxisXnpc = document.querySelector(".game-x-axis-npc");
     this.gameNarrator = document.querySelector(".game-narrator");
+    this.playerNarrator = document.querySelector(".player-narrator");
+    this.npcNarrator = document.querySelector(".npc-narrator");
     this.shipUnitContainer = document.querySelector(".ship-unit-container");
     this.narratorMessage = document.querySelector(".narrator-message");
     this.gameBoardFrameNpc = document.querySelector(".gameboard-frame-npc");
     this.gameBoardsContainer = document.querySelector(".gameboards-container");
+    this.npcSide = document.querySelector(".npc-side");
+    this.playerSideTitle = document.querySelector(".player-side-title");
   }
 
   renderGameBoard(gameBoard) {
@@ -71,14 +75,12 @@ class GameView {
     }
   }
 
-  //   renderGameBoardFields(coordinatesLetters, coordinatesNumbers) {
-  //   for (let i = 1; i <= 100; i++) {
-  //     this.gameBoard.insertAdjacentHTML(
-  //       "beforeend",
-  //       `<div class="gameboard-field" data-coord-x="${coordinatesNumbers(i)}" data-coord-y="${coordinatesLetters(i)}" data-coords="${coordinatesLetters(i)}${coordinatesNumbers(i)}">${coordinatesLetters(i)}-${coordinatesNumbers(i)}</div>`,
-  //     );
-  //   }
-  // }
+  // instead of human clicking on gameField (dataType is html element), this returns a random one
+  getRandomFieldNpc = () => {
+    for (const gameField of this.gameBoardNpc.children) {
+      console.log(gameField);
+    }
+  };
 
   renderNarratorMessage() {
     // const test = new Typewriter(".narrator-message", {
@@ -100,10 +102,10 @@ class GameView {
     });
   }
 
-  setTargetFields(targetShipCoords) {
+  setTargetFields(targetShipCoords, gameBoard) {
     // Searches the correct divs based on ships coordinates
     const targetFields = targetShipCoords.map((coord) => {
-      for (const field of this.gameBoard.children) {
+      for (const field of gameBoard.children) {
         // console.log(field.dataset.coords);
         if (field.dataset.coords === coord) {
           return field;
@@ -114,13 +116,11 @@ class GameView {
     this.currentTargetFields = targetFields;
   }
 
-  isOverLapping(fleetPlayer1) {
+  isOverLapping(fleet) {
     const checkedFields = this.currentTargetFields.map((field) => {
       if (!field) return;
       // Checks based on placed ships and there coords if field is occupied already
-      return fleetPlayer1.some((ship) =>
-        ship.position.includes(field.dataset.coords),
-      );
+      return fleet.some((ship) => ship.position.includes(field.dataset.coords));
     });
     // Checks the if any of the tested fields is not true
     return checkedFields.some((field) => field === true);
