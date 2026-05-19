@@ -9,7 +9,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
+  /* better font Press Start 2P */
   font-family: "Fredoka", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
@@ -233,7 +233,17 @@ body {
   border: 0.5px solid #f0a800;
 }
 
+.placed.ship-unit-dreadnought {
+  background-color: rgba(180, 80, 0, 0.38);
+  border: 0.5px solid #f0a800;
+}
+
 .ship-unit-cruiser {
+  background-color: rgba(0, 35, 50, 0.92);
+  border: 0.5px solid #00ccdd;
+}
+
+.placed.ship-unit-cruiser {
   background-color: rgba(0, 35, 50, 0.92);
   border: 0.5px solid #00ccdd;
 }
@@ -243,12 +253,27 @@ body {
   border: 0.5px solid #00cc55;
 }
 
+.placed.ship-unit-destroyer {
+  background-color: rgba(0, 35, 10, 0.92);
+  border: 0.5px solid #00cc55;
+}
+
 .ship-unit-frigate {
   background-color: rgba(25, 5, 50, 0.92);
   border: 0.5px solid #9933ff;
 }
 
+.placed.ship-unit-frigate {
+  background-color: rgba(25, 5, 50, 0.92);
+  border: 0.5px solid #9933ff;
+}
+
 .ship-unit-corvette {
+  background-color: #8a1000;
+  border: 0.5px solid #ff4433;
+}
+
+.placed.ship-unit-corvette {
   background-color: #8a1000;
   border: 0.5px solid #ff4433;
 }
@@ -265,7 +290,7 @@ body {
 }
 
 /* needs to be added, so button stays like that */
-.ship.selected {
+.selected {
   background-color: rgba(30, 70, 140, 1);
   border: 2px solid #8ec5ff;
 }
@@ -418,4 +443,12 @@ body {
 
 .hidden {
   display: none;
+}
+
+.hit {
+  background-color: red !important;
+}
+
+.miss {
+  background-color: white !important;
 }

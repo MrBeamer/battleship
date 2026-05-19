@@ -27,6 +27,11 @@ class GameView {
     this.playerSideTitle = document.querySelector(".player-side-title");
   }
 
+  hideShipUnits(selectedShip) {
+    selectedShip.querySelector(".ship-unit-container").style.visibility =
+      "hidden";
+  }
+
   renderGameBoard(gameBoard) {
     // Get ID from gameBoard conditionally rendering the axis for npc or player
     const gameBoardId = gameBoard.id;

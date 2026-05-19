@@ -3,14 +3,18 @@ import { GameView } from "./GameView.js";
 import { Ship } from "./Ship.js";
 import { getRandomShipAxis } from "./helper.js";
 import { getRandomCoord } from "./helper.js";
+import { lookUpShipType } from "./helper.js";
 
 class GameController {
   view = new GameView();
   gameBoard = new Gameboard();
   selectedShip = null;
   selectedShipPosition = null;
-  shipPlacementPhase = null;
+  shipPlacementPhase = null; // maybe not used
   shipAxis = "X";
+  shipNavigationState = null; // maybe not used
+  gamePhase = "preparation";
+  playerTurn = true;
   constructor() {
     // For hover, preselect phase
     this.view.gameBoard.addEventListener("pointerover", (event) =>
@@ -43,6 +47,45 @@ class GameController {
     });
 
     // Battle Phase, get coordinates and compare with ship array of npc
+    this.view.gameBoardNpc.addEventListener("click", (event) => {
+      this.shootNpcShip(event);
+    });
+  }
+
+  shootNpcShip(event) {
+    const shootingTarget = event.target.closest(".gameboard-field");
+    // Returns if field is undefined, clicked between lines
+    if (!shootingTarget) return;
+    // Makes sure if player hit a ship field that it can not be targeted again
+    if (
+      shootingTarget.classList.contains("hit") ||
+      shootingTarget.classList.contains("miss")
+    )
+      return;
+    // Gets the coordinate from target
+    const targetCoord = shootingTarget.dataset.coords;
+    // Saves hit boolean true or false
+    let hit = null;
+    console.log(targetCoord);
+    console.log(shootingTarget);
+    for (let ship of this.gameBoard.fleetNpc) {
+      console.log(ship.position);
+      hit = ship.position.some((coord) => {
+        console.log(coord);
+        return coord === targetCoord;
+      });
+      console.log(hit);
+      // If field has ship unit, add hit to the div
+      if (hit) {
+        console.log("hit");
+        shootingTarget.classList.add("hit");
+        return;
+      }
+    }
+    // If field has no ship unit, add miss to the div
+    if (!hit) {
+      shootingTarget.classList.add("miss");
+    }
   }
 
   /////////////////////////////////////
@@ -77,7 +120,7 @@ class GameController {
         // Calls the helper function to get random Axis
         randomShipAxis = getRandomShipAxis();
 
-        console.log(randomField);
+        // console.log(randomField);
         // Gets the position of the ship (coordinates as array)
         selectedShipCoords = this.gameBoard.getTempShipCoords(
           randomField,
@@ -85,7 +128,7 @@ class GameController {
           randomShipAxis,
         );
 
-        console.log(selectedShipCoords);
+        // console.log(selectedShipCoords);
         //Set currentFields to the current occupied html elements
         this.view.setTargetFields(selectedShipCoords, this.view.gameBoardNpc);
         // Checks if ship isOverlapping
@@ -96,9 +139,10 @@ class GameController {
       // UI - Places ship
       this.view.currentTargetFields.forEach((field) => {
         if (!field) return;
-
+        // Lookup correct ship class, to color field in the ship color
+        const shipTypeClass = lookUpShipType(ship.type);
         // replace later one with other class, because should be hidden and only visible on hit
-        field.classList.add("placed");
+        field.classList.add("placed", shipTypeClass);
       });
 
       // Data: Update ship with coordinates and axis
@@ -138,9 +182,6 @@ class GameController {
     this.view.npcNarrator.classList.remove("hidden");
     // Add align-boards to align the boards
     this.view.gameBoardsContainer.classList.add("align-boards");
-
-    // Test delete later for bot radom setting ships
-    // this.gameBoard.placeRandomShipsNpc();
     // Initializes the npc board by placing all 5 ships randomly on it
     this.initializeNpcShipPlacements();
   }
@@ -155,8 +196,17 @@ class GameController {
   handleSelectShip(event) {
     const selectedShip = event.target.closest(".ship");
     if (!selectedShip) return;
+
+    // Check if previously a ship selection button, was clicked if so remove the class selected
+    if (this.selectedShip?.classList.contains("selected")) {
+      this.selectedShip.classList.remove("selected");
+    }
+    // After removing the class from previously clicked button add it to the current clicked one
+    selectedShip.classList.add("selected");
+
     // Safes the selected ship (html element) temporarily
     this.selectedShip = selectedShip;
+
     console.log(selectedShip);
   }
 
@@ -174,7 +224,9 @@ class GameController {
     // Get currentTargetFields (html elements) and add highlight them permanently
     this.view.currentTargetFields.forEach((field) => {
       if (!field) return;
-      field.classList.add("placed");
+      // Lookup correct ship class, to color field in the ship color
+      const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
+      field.classList.add("placed", shipTypeClass);
     });
 
     // If a ship is selected create an ship object and push into the fleetPlayer1 array
@@ -191,12 +243,12 @@ class GameController {
     this.gameBoard.placeShip(ship);
     console.log(ship);
     console.log(this.gameBoard.fleetPlayer1);
-
     // If ship is placed on the board, disable the ship button, so user can not pick it again
     this.selectedShip.disabled = true;
     //Hide ship unit
-    this.view.shipUnitContainer.style.visibility = "hidden";
-
+    this.view.hideShipUnits(this.selectedShip);
+    // After placing ship, remove the selected class from the button
+    this.selectedShip.classList.remove("selected");
     // After placing ship, remove selected ship from the temp memory state
     this.selectedShip = null;
     // After placing ship, remove position from the temp memory state
@@ -264,15 +316,13 @@ class GameController {
 }
 
 export { GameController };
-//TODAY GOAL: added method to controller to initalize random placement of all 5 NPC ships on npc board (while respecting bounderies)
+//TODAY GOAL: fire shoot, hit detection highlight fields on miss and hit
+// ARCHIVED
 
-// Sunday
-// Create method that randomize place ships for npc
-// 1. Get random GameField
-// 2. check if random GameField is overlapping or ship would be outOfBound
-// 3. If return to find another random gameField, If not handover to getTempCoords
+//GOAL:s
+// Flow: click to shoot > if hit > another shot > if no hit > next player turn
+// Change hit property of ship, when hit
 
-// Add classes to highlight fields
 // add method that creates ship objects and pushes them in array fleet 2
 // Create addeventlistner to get coordinates and compare with ship array of npc
 // UI: Confirm hit and apply classes to show in the UI

@@ -12,4 +12,16 @@ const getRandomCoord = () => {
   return randomField;
 };
 
-export { getRandomShipAxis, getRandomCoord };
+const lookUpShipType = (shipType) => {
+  const lookUp = {
+    dreadnought: "ship-unit-dreadnought",
+    cruiser: "ship-unit-cruiser",
+    destroyer: "ship-unit-destroyer",
+    frigate: "ship-unit-frigate",
+    corvette: "ship-unit-corvette",
+  };
+
+  return lookUp[shipType];
+};
+
+export { getRandomShipAxis, getRandomCoord, lookUpShipType };
