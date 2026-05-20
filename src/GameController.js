@@ -52,40 +52,106 @@ class GameController {
     });
   }
 
-  shootNpcShip(event) {
-    const shootingTarget = event.target.closest(".gameboard-field");
-    // Returns if field is undefined, clicked between lines
-    if (!shootingTarget) return;
-    // Makes sure if player hit a ship field that it can not be targeted again
-    if (
-      shootingTarget.classList.contains("hit") ||
-      shootingTarget.classList.contains("miss")
-    )
-      return;
-    // Gets the coordinate from target
-    const targetCoord = shootingTarget.dataset.coords;
+  toggleTurn() {
+    this.playerTurn = !this.playerTurn;
+    return this.playerTurn;
+  }
+
+  processAttack(shootingTargetField, targetCoord, fleet) {
     // Saves hit boolean true or false
     let hit = null;
     console.log(targetCoord);
-    console.log(shootingTarget);
-    for (let ship of this.gameBoard.fleetNpc) {
+    console.log(shootingTargetField);
+    for (let ship of fleet) {
       console.log(ship.position);
       hit = ship.position.some((coord) => {
-        console.log(coord);
         return coord === targetCoord;
       });
       console.log(hit);
       // If field has ship unit, add hit to the div
       if (hit) {
         console.log("hit");
-        shootingTarget.classList.add("hit");
-        return;
+        shootingTargetField.classList.add("hit");
+        // add here helper function with updates ship that its hit
+        const hitShip = fleet.find((ship) => {
+          return ship.position.includes(targetCoord);
+        });
+        // Increments hint counter in the ship object
+        hitShip.hit();
+        // Checks after every hit if ship is sunk
+        const isShipSunk = hitShip.isSunk();
+        if (isShipSunk) {
+          //play sound
+          // make ship visible
+          console.log("ship is sunk");
+        }
+        return hit;
       }
     }
     // If field has no ship unit, add miss to the div
     if (!hit) {
-      shootingTarget.classList.add("miss");
+      shootingTargetField.classList.add("miss");
+      console.log("miss");
+      /// helper function move away, npc turn
+      // if computer turn disable click event for player with if playerTurn is false return
+      //   toggleTurn();
     }
+    return hit;
+  }
+
+  shootNpcShip(event) {
+    // Makes sure that player only can shot, when it is his turn
+    if (!this.playerTurn) return;
+    // delete later
+    console.log("player turn");
+    const shootingTargetField = event.target.closest(".gameboard-field");
+    // Returns if field is undefined, clicked between lines
+    if (!shootingTargetField) return;
+    // Makes sure if player hit a ship field that it can not be targeted again
+    if (
+      shootingTargetField.classList.contains("hit") ||
+      shootingTargetField.classList.contains("miss")
+    )
+      return;
+    // Gets the coordinate from target
+    const targetCoord = shootingTargetField.dataset.coords;
+    const isHit = this.processAttack(
+      shootingTargetField,
+      targetCoord,
+      this.gameBoard.fleetNpc,
+    );
+    console.log(isHit);
+    // If player miss shot, switch to npc
+    if (!isHit) {
+      this.toggleTurn();
+      // after switching to npc he can attack, use timeout to have delay between player shot and npc shot
+
+      setTimeout(() => {
+        this.npcAttack();
+      }, 2000);
+    }
+  }
+
+  npcAttack() {
+    console.log("npc turn");
+    // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
+    let isHit = true;
+    while (isHit) {
+      const randomCoord = getRandomCoord();
+      // instead of human clicking on gameField (dataType is html element), this returns a random one
+      const randomShootingTargetField = this.view.getRandomFieldClickNpc(
+        randomCoord,
+        this.view.gameBoard,
+      );
+      isHit = this.processAttack(
+        randomShootingTargetField,
+        randomCoord,
+        this.gameBoard.fleetPlayer1,
+      );
+    }
+    // After miss shot, next players turn
+    console.log(this.gameBoard.fleetPlayer1);
+    this.toggleTurn();
   }
 
   /////////////////////////////////////
@@ -109,13 +175,10 @@ class GameController {
         // Gets a random coord like A3 , should run only per ship not for every gameField, thats why placed here
         const randomCoord = getRandomCoord();
         // instead of human clicking on gameField (dataType is html element), this returns a random one
-        const getRandomFieldClickNpc = () => {
-          for (const gameField of this.view.gameBoardNpc.children) {
-            if (gameField.dataset.coords === randomCoord) return gameField;
-          }
-        };
-
-        const randomField = getRandomFieldClickNpc();
+        const randomField = this.view.getRandomFieldClickNpc(
+          randomCoord,
+          this.view.gameBoardNpc,
+        );
         const shipLength = ship.length;
         // Calls the helper function to get random Axis
         randomShipAxis = getRandomShipAxis();
@@ -316,14 +379,13 @@ class GameController {
 }
 
 export { GameController };
-//TODAY GOAL: fire shoot, hit detection highlight fields on miss and hit
-// ARCHIVED
+//TODAY GOAL: add  registration hit of ship , add sunk if hits equal length of ship, handover / switching turns between player and npc when player or npc misses if hit another turn, add random shot from npc,
+
+//Tomorrow need to add delay between every shot somehow
 
 //GOAL:s
 // Flow: click to shoot > if hit > another shot > if no hit > next player turn
 // Change hit property of ship, when hit
 
-// add method that creates ship objects and pushes them in array fleet 2
-// Create addeventlistner to get coordinates and compare with ship array of npc
 // UI: Confirm hit and apply classes to show in the UI
 // Data: Update ship hint counter to and sync with UI

@@ -157,6 +157,12 @@ class GameView {
       field.classList.remove("outOfBound");
     });
   }
+
+  getRandomFieldClickNpc(randomCoord, gameBoard) {
+    for (const gameField of gameBoard.children) {
+      if (gameField.dataset.coords === randomCoord) return gameField;
+    }
+  }
 }
 
 export { GameView };
