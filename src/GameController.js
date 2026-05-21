@@ -35,7 +35,7 @@ class GameController {
 
     // Game Menu Controls
     this.view.resetBtn.addEventListener("click", (event) => {
-      this.reset(event);
+      this.resetShipPlacement(event);
     });
 
     this.view.rotateBtn.addEventListener("click", (event) => {
@@ -50,9 +50,34 @@ class GameController {
     this.view.gameBoardNpc.addEventListener("click", (event) => {
       this.shootNpcShip(event);
     });
+    this.view.resetGameBtn.addEventListener("click", (event) => {
+      this.resetGame(event);
+    });
+  }
+
+  isGameOver() {
+    let winner = null;
+    const isNpcFleetSunk = this.gameBoard.fleetNpc.every((ship) =>
+      ship.isSunk(),
+    );
+    const isPlayerFleetSunk = this.gameBoard.fleetPlayer1.every((ship) =>
+      ship.isSunk(),
+    );
+    if (isPlayerFleetSunk) {
+      console.log("npc wins");
+      //Open GameOver Menu
+      this.view.dialog.showModal();
+    } else if (isNpcFleetSunk) {
+      console.log("player wins");
+      //Open GameOver Menu
+    }
+    this.view.dialog.showModal();
   }
 
   toggleTurn() {
+    // Check after every turn, if there is a winner
+    this.isGameOver();
+    // Toggles depending on which players turn is
     this.playerTurn = !this.playerTurn;
     return this.playerTurn;
   }
@@ -120,35 +145,28 @@ class GameController {
       targetCoord,
       this.gameBoard.fleetNpc,
     );
-    console.log(isHit);
-    // If player miss shot, switch to npc
-    if (!isHit) {
-      this.toggleTurn();
-      // after switching to npc he can attack, use timeout to have delay between player shot and npc shot
-
-      setTimeout(() => {
-        this.npcAttack();
-      }, 2000);
-    }
+    // After player shot, switch to npc
+    this.toggleTurn();
+    // after switching to npc he can attack, use timeout to have delay between player shot and npc shot
+    setTimeout(() => {
+      this.npcAttack();
+    }, 2000);
   }
 
   npcAttack() {
     console.log("npc turn");
     // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
-    let isHit = true;
-    while (isHit) {
-      const randomCoord = getRandomCoord();
-      // instead of human clicking on gameField (dataType is html element), this returns a random one
-      const randomShootingTargetField = this.view.getRandomFieldClickNpc(
-        randomCoord,
-        this.view.gameBoard,
-      );
-      isHit = this.processAttack(
-        randomShootingTargetField,
-        randomCoord,
-        this.gameBoard.fleetPlayer1,
-      );
-    }
+    const randomCoord = getRandomCoord();
+    // instead of human clicking on gameField (dataType is html element), this returns a random one
+    const randomShootingTargetField = this.view.getRandomFieldClickNpc(
+      randomCoord,
+      this.view.gameBoard,
+    );
+    const isHit = this.processAttack(
+      randomShootingTargetField,
+      randomCoord,
+      this.gameBoard.fleetPlayer1,
+    );
     // After miss shot, next players turn
     console.log(this.gameBoard.fleetPlayer1);
     this.toggleTurn();
@@ -224,10 +242,9 @@ class GameController {
 
   /////////////////////////////////////
   startGame() {
-    console.log("start");
     // Game can only start, if all ships are placed
-    // if (this.gameBoard.fleetPlayer1.length !== 5) return;
-
+    if (this.gameBoard.fleetPlayer1.length !== 5) return;
+    //Hide html elements from preparation screen
     this.view.shipContainer.classList.add("hidden");
     this.view.gameMenu.classList.add("hidden");
     this.view.gameNarrator.classList.add("hidden");
@@ -358,8 +375,7 @@ class GameController {
     this.view.renderNarratorMessage();
   }
 
-  reset() {
-    console.log("reset");
+  resetShipPlacement() {
     this.selectedShip = null;
     this.selectedShipPosition = null;
     this.gameBoard.fleetPlayer1 = [];
@@ -375,17 +391,16 @@ class GameController {
     }
     const clickSound = new Audio("path/to/sound.mp3");
     clickSound.play();
+
+    ///need to remove all ship classes here
+  }
+
+  resetGame() {
+    console.log("reset game");
   }
 }
 
 export { GameController };
-//TODAY GOAL: add  registration hit of ship , add sunk if hits equal length of ship, handover / switching turns between player and npc when player or npc misses if hit another turn, add random shot from npc,
+//Today Goal; add delay between every shot, integrate isGameOver logic, integrate game over screen basic
 
-//Tomorrow need to add delay between every shot somehow
-
-//GOAL:s
-// Flow: click to shoot > if hit > another shot > if no hit > next player turn
-// Change hit property of ship, when hit
-
-// UI: Confirm hit and apply classes to show in the UI
-// Data: Update ship hint counter to and sync with UI
+//Tomorrow remove all ship classes or think about it rework both resets

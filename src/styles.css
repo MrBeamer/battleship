@@ -187,6 +187,16 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #c8e8ff;
 }
+
+.btn-reset-game {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #002a00;
+  border-color: #00aa33;
+  color: #00ff66;
+}
 /* Fleet Selection */
 
 .ship-container {
@@ -451,4 +461,28 @@ body {
 
 .miss {
   background-color: white !important;
+}
+
+/* Dialog  */
+dialog {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+
+dialog[open] {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 40px 25px 40px;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-title {
+  margin-bottom: 15px;
+}
+
+.game-over-message {
+  margin: 20px 0;
 }

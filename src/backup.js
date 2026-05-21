@@ -1,303 +1,53 @@
-handleAddClass(event) {
-    const length = 3;
-    // gets ships placement coordinates
-    const gameField = event.target.closest(".gameboard-field");
-    if (!gameField) return;
-    //
-    // const arrShipCoords = [];
-    // for (let i = 0; i < length; i++) {
-    //   let coordsSelected = i + parseInt(gameField.dataset["coordX"]);
-    //   console.log(coordsSelected);
-    //   const coords = gameField.dataset["coordY"] + coordsSelected;
-    //   console.log(coords);
-    //   arrShipCoords.push(coords);
-    // }
-    // console.log(gameField);
-    // console.log(gameField.dataset["coordX"]);
-    // console.log(gameField.dataset["coordY"]);
-    // console.log(arrShipCoords);
-
-    const tempShipCoords = this.gameBoard.getShipCoordinates(gameField);
-    // Searches the correct divs based on ships coordinates
-    const shipDivs = tempShipCoords.map((coord) => {
-      for (const field of this.view.gameBoard.children) {
-        if (field.dataset.coords === coord) {
-          console.log(field);
-          return field;
-        }
-      }
-    });
-
-
-     getCoordinates(index) {
-    const letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
-    let calcIndex = Math.floor((index - 1) / 10);
-    return letters[calcIndex];
-    // if (index <= 10) return "A";
-    // else if (index <= 20) return "B";
-    // else if (index <= 30) return "C";
-    // else if (index <= 40) return "D";
-    // else if (index <= 50) return "E";
-    // else if (index <= 60) return "F";
-    // else if (index <= 70) return "G";
-    // else if (index <= 80) return "H";
-    // else if (index <= 90) return "I";
-    // else if (index <= 100) return "J";
-  }
-  <img class="ship-sprite" src="${battleship}" alt="" />
-
-
-
-  handleDragStart(event) {
-    // gets ship length of selected ship and safe current ship length in the controller
-    this.currentShipLength = event.target.dataset.shipLength;
-    console.log(`Length of selected ship: ${this.currentShipLength}`);
-
-    // Sets / adds the ship length to the current selected drag event (ship)
-    event.dataTransfer.setData("shipLength", this.currentShipLength);
-
-    //Remove offset
-    const ship = event.target.closest(".ship-slot");
-    event.dataTransfer.setDragImage(ship, 0, 0);
-
-    // Clean up: restore pointer events to the ships
-    document.querySelectorAll(".is-dragging").forEach((el) => {
-      el.classList.remove("is-dragging");
-    });
+npcAttack() {
+    console.log("npc turn");
+    // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
+    let isHit = true;
+    while (isHit) {
+      const randomCoord = getRandomCoord();
+      // instead of human clicking on gameField (dataType is html element), this returns a random one
+      const randomShootingTargetField = this.view.getRandomFieldClickNpc(
+        randomCoord,
+        this.view.gameBoard,
+      );
+      isHit = this.processAttack(
+        randomShootingTargetField,
+        randomCoord,
+        this.gameBoard.fleetPlayer1,
+      );
+    }
+    // After miss shot, next players turn
+    console.log(this.gameBoard.fleetPlayer1);
+    this.toggleTurn();
   }
 
-  handlePointerDown(event) {
-    event.preventDefault();
-    console.log(event.target);
-    // // gets ships placement coordinates
-    const gameField = event.target.closest(".gameboard-field");
-    if (!gameField) return;
-    const shipLength = event.dataTransfer.getData("shipLength");
-    console.log(`Length of dropped ship: ${shipLength}`);
-
-    // Creates a new ship data entry
-    //move to help or somewhere later
-    const ship = new Ship(shipLength);
-    console.log(ship);
-
-    /// code from drop before
-
-    // Get temp ship coords - mouseover
-    const targetShipCoords = this.gameBoard.getTempShipCoords(
-      gameField,
-      shipLength,
+   shootNpcShip(event) {
+    // Makes sure that player only can shot, when it is his turn
+    if (!this.playerTurn) return;
+    // delete later
+    console.log("player turn");
+    const shootingTargetField = event.target.closest(".gameboard-field");
+    // Returns if field is undefined, clicked between lines
+    if (!shootingTargetField) return;
+    // Makes sure if player hit a ship field that it can not be targeted again
+    if (
+      shootingTargetField.classList.contains("hit") ||
+      shootingTargetField.classList.contains("miss")
+    )
+      return;
+    // Gets the coordinate from target
+    const targetCoord = shootingTargetField.dataset.coords;
+    const isHit = this.processAttack(
+      shootingTargetField,
+      targetCoord,
+      this.gameBoard.fleetNpc,
     );
-    // Gets the hoovered or locked in html of the fields
-    const targetFields = this.view.getTargetFields(targetShipCoords);
-    console.log(targetFields);
-    console.log(`Coordinates of ship: ${targetShipCoords}`);
-    // // Add class that highlights divs for potential ship placement
-    targetFields.forEach((element) => {
-      if (!element) return;
-      console.log(element);
-      element.classList.add("ship");
-    });
-  }
-
-  //  handlePointerUp(event) {
-    // // // gets ships placement coordinates
-    // const gameField = event.target.closest(".gameboard-field");
-    // if (!gameField) return;
-    // const shipLength = event.target.dataset.shipLength;
-    // console.log(`Length of dropped ship: ${shipLength}`);
-    // // Creates a new ship data entry
-    // //move to help or somewhere later
-    // const ship = new Ship(shipLength);
-    // console.log(ship);
-    // /// code from drop before
-    // // Get temp ship coords - mouseover
-    // const targetShipCoords = this.gameBoard.getTempShipCoords(
-    //   gameField,
-    //   shipLength,
-    // );
-    // // Gets the hoovered or locked in html of the fields
-    // const targetFields = this.view.getTargetFields(targetShipCoords);
-    // console.log(`Coordinates of ship: ${targetShipCoords}`);
-    // // // Add class that highlights divs for potential ship placement
-    // targetFields.forEach((element) => {
-    //   if (!element) return;
-    //   console.log(element);
-    //   element.classList.add("ship");
-    // });
-    // const gameField = event.target.closest(".gameboard-field");
-    // if (!gameField) return;
-    // I think I do not need this anymore because I know every ship that uses drop, is perma
-    // this.view.currentTargetFields.forEach((element) => {
-    //   if (!element) return;
-    //   element.classList.add("ship-perma");
-    // });
-    // After Ship is dropped, get Permanent Ship Coords from the board
-    // this.gameBoard.getPermShipCoords(gameField);
-  // }
-
-      // targetFields.forEach((element) => {
-    //   if (!element) return;
-    //   console.log(element.dataset.coords);
-    //   // Checks based on placed ships and there coords if field is occupied already
-    //   const isOverlapping = this.gameBoard.fleetPlayer1.some((ship) =>
-    //     ship.position.includes(element.dataset.coords),
-    //   );
-    //   console.log(isOverlapping);
-    //   if (isOverlapping) element.classList.add("overlapping");
-    //   else {
-    //     element.classList.add("preview");
-    //   }
-    // });
-
-      // highlightTargetFields(fleetPlayer1) {
-  //   this.currentTargetFields.forEach((field) => {
-  //     if (!field) return;
-  //     // Checks based on placed ships and there coords if field is occupied already
-  //     const isOverLapping = fleetPlayer1.some((ship) =>
-  //       ship.position.includes(field.dataset.coords),
-  //     );
-  //     if (isOverLapping) field.classList.add("overlapping");
-  //     else {
-  //       field.classList.add("preview");
-  //     }
-  //   });
-  // }
-
-    worksgetTempShipCoords(gameField, shipLength, shipAxis) {
-
-    if(shipAxis === "X")
-    let tempShipCoords = [];
-    for (let i = 0; i < shipLength; i++) {
-      let coordX = i + parseInt(gameField.dataset.coordX);
-      let coordY = gameField.dataset.coordY;
-      // This checks if coordinate is within the gameBoard
-      if (coordX > 10) coordX = undefined;
-      // This checks if coordinate is within the gameBoard
-      if (coordY > 10) coordX = undefined;
-      const coords = coordY + coordX;
-      console.log(`Coord Y: ${coordY}`);
-      console.log(`Coord X: ${coordX}`);
-      tempShipCoords.push(coords);
+    console.log(isHit);
+ 
+    if (!isHit) {
+      this.toggleTurn();
+      // after switching to npc he can attack, use timeout to have delay between player shot and npc shot
+      setTimeout(() => {
+        this.npcAttack();
+      }, 2000);
     }
-    // console.log(gameField);
-    // console.log(gameField.dataset["coordX"]);
-    // console.log(gameField.dataset["coordY"]);
-    // console.log(tempShipCoords);
-    return tempShipCoords;
-  }
-
-  // y
-  xxgetTempShipCoords(gameField, shipLength) {
-    let tempShipCoords = [];
-    for (let i = 0; i < shipLength; i++) {
-      let coordX = parseInt(gameField.dataset.coordX);
-      let coordY = gameField.dataset.coordY;
-      // Turns letter into charCode to then increase the code to get next letter from the board, then transform code back to string
-      coordY = String.fromCharCode(i + coordY.charCodeAt(0));
-      // This checks if coordinate is within the gameBoard
-      if (coordX > 10) coordX = undefined;
-      // This checks if coordinate is within the gameBoard
-      if (coordY > 10) coordX = undefined;
-      const coords = coordY + coordX;
-
-      tempShipCoords.push(coords);
-    }
-    // console.log(gameField);
-    // console.log(gameField.dataset["coordX"]);
-    // console.log(gameField.dataset["coordY"]);
-    console.log(tempShipCoords);
-    return tempShipCoords;
-  }
-
-  //Horizontal
-/// carrier (5f) fits only starting on 1 or 6
-//Vertical
-/// carrier (5f) fits only starting on A or F
-
-//Horizontal
-/// batttleship (4f) fits  between on 1 and  7
-//Vertical
-/// batttleship (4f) fits between on A and G
-
-//Horizontal
-/// cruiser and submarine (3f) fits  between on 1 and  8
-//Vertical
-/// cruiser and submarine (3f) fits between on A and H
-
-//Horizontal
-/// cruiser and submarine (3f) fits  between on 1 and  9
-//Vertical
-/// cruiser and submarine (3f) fits between on A and I
-
-
-
-
-//comes from the gamaeboard
-placeRandomShipsNpc() {
-    // call the function initializeNpcShipPlacements
-    // creates ships, which are substitutes for players html element ships, also reduce complexity
-    const npcShipList = [
-      new Ship(5, "dreadnought", "placeholderPosition", "placeholderAxis"),
-      new Ship(4, "cruiser", "placeholderPosition", "placeholderAxis"),
-      new Ship(3, "destroyer", "placeholderPosition", "placeholderAxis"),
-      new Ship(3, "frigate", "placeholderPosition", "placeholderAxis"),
-      new Ship(2, "corvette", "placeholderPosition", "placeholderAxis"),
-    ];
-
-    // Do this for every ship
-    npcShipList.forEach((ship) => {
-      let isOverLapping = true;
-      let isOutOfBound = true;
-      let randomShipAxis = null;
-      let selectedShipCoords = null;
-      while (isOverLapping || isOutOfBound) {
-        // Gets a random coord like A3 , should run only per ship not for every gameField, thats why placed here
-        const randomCoord = getRandomCoord();
-        // instead of human clicking on gameField (dataType is html element), this returns a random one
-        const getRandomFieldClickNpc = () => {
-          for (const gameField of this.view.gameBoardNpc.children) {
-            console.log(gameField.dataset.coords);
-            if (gameField.dataset.coords === randomCoord) return gameField;
-          }
-        };
-
-        const randomField = getRandomFieldClickNpc();
-        const shipLength = ship.length;
-        // Calls the helper function to get random Axis
-        randomShipAxis = getRandomShipAxis();
-
-        console.log(randomField);
-        // Gets the position of the ship (coordinates as array)
-        selectedShipCoords = this.getTempShipCoords(
-          randomField,
-          shipLength,
-          randomShipAxis,
-        );
-        this.view.setTargetFields(selectedShipCoords, this.view.gameBoardNpc);
-
-        // Checks if ship isOverlapping
-        isOverLapping = this.view.isOverLapping(this.fleetNpc);
-        // Checks if ship outOfBound
-        isOutOfBound = this.view.isOutOfBound();
-      }
-      // UI - Places ship
-      this.view.currentTargetFields.forEach((field) => {
-        if (!field) return;
-
-        // replace later one with other class, because should be hidden and only visible on hit
-        field.classList.add("placed");
-      });
-
-      // Data: Update ship with coordinates and axis
-      const upDateShip = () => {
-        ship.position = selectedShipCoords;
-        ship.axis = randomShipAxis;
-      };
-      upDateShip();
-
-      // Push the updated ship into the fleet array
-      this.fleetNpc.push(ship);
-    }); // end of ship for each currently
-    console.log(this.fleetNpc);
-    console.log(this.view.currentTargetFields);
   }

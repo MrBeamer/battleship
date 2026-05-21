@@ -158,5 +158,21 @@
         </button>
       </div>
     </div>
+    <dialog id="dialog">
+      <p class="game-over-title">YOU WIN!</p>
+      <div class="narrator-img-container">
+        <img
+          class="narrator-img"
+          src="./public/player_narrator.png"
+          alt="anime captain woman"
+        />
+      </div>
+      <p class="game-over-mesage">
+        Mission accomplished, Captain! You truly are the master of the seas.|
+      </p>
+      <button class="btn-reset-game" commandfor="dialog" command="close">
+        New Battle
+      </button>
+    </dialog>
   </body>
 </html>

@@ -25,6 +25,8 @@ class GameView {
     this.gameBoardsContainer = document.querySelector(".gameboards-container");
     this.npcSide = document.querySelector(".npc-side");
     this.playerSideTitle = document.querySelector(".player-side-title");
+    this.dialog = document.querySelector("dialog");
+    this.resetGameBtn = document.querySelector(".btn-reset-game");
   }
 
   hideShipUnits(selectedShip) {
