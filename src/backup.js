@@ -51,3 +51,5 @@ npcAttack() {
       }, 2000);
     }
   }
+
+     this.view.testtrtrtrdddfdfsdssdsds("We lost the battle, Captain. Better luck on the next voyage.");

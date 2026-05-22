@@ -7,14 +7,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
     <script type="module" src="app.js"></script>
     <title>Battleships</title>
   </head>
   <body>
-    <div class="game-frame-center">
+    <div class="arcade-overlay">
+      <button class="btn-insert-coin">Insert Coin To Play</button>
+    </div>
+    <div class="game-starting-screen">
+      <button class="btn-game-start">Start Game</button>
+    </div>
+    <div class="game-frame-center hidden">
       <div class="game-narrator">
         <div class="narrator-img-container">
           <img
@@ -159,7 +165,7 @@
       </div>
     </div>
     <dialog id="dialog">
-      <p class="game-over-title">YOU WIN!</p>
+      <p class="announcement-winner"></p>
       <div class="narrator-img-container">
         <img
           class="narrator-img"
@@ -167,9 +173,7 @@
           alt="anime captain woman"
         />
       </div>
-      <p class="game-over-mesage">
-        Mission accomplished, Captain! You truly are the master of the seas.|
-      </p>
+      <p class="game-over-message"></p>
       <button class="btn-reset-game" commandfor="dialog" command="close">
         New Battle
       </button>

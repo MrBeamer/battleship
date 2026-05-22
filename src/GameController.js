@@ -13,9 +13,19 @@ class GameController {
   shipPlacementPhase = null; // maybe not used
   shipAxis = "X";
   shipNavigationState = null; // maybe not used
-  gamePhase = "preparation";
+  gamePhase = "preparation"; // maybe not used
   playerTurn = true;
+  isGameOver = false;
+  titleScreenMusic = null;
   constructor() {
+    // Title screen start game
+    this.view.gameStartBtn.addEventListener("click", (event) => {
+      this.startPreparation(event);
+    });
+    this.view.insertCoinBtn.addEventListener("click", (event) => {
+      this.playTitleMusic(event);
+    });
+
     // For hover, preselect phase
     this.view.gameBoard.addEventListener("pointerover", (event) =>
       this.handlePointeOver(event),
@@ -55,8 +65,7 @@ class GameController {
     });
   }
 
-  isGameOver() {
-    let winner = null;
+  checkGameOver() {
     const isNpcFleetSunk = this.gameBoard.fleetNpc.every((ship) =>
       ship.isSunk(),
     );
@@ -64,19 +73,35 @@ class GameController {
       ship.isSunk(),
     );
     if (isPlayerFleetSunk) {
-      console.log("npc wins");
+      // Renders winner in the GameOver screen
+      this.view.renderWinnerAnnouncement("NPC WIN");
+      this.view.renderGameOverMessage(
+        "We lost the battle, Captain. Better luck on the next voyage.",
+      );
+      this.isGameOver = true;
       //Open GameOver Menu
       this.view.dialog.showModal();
     } else if (isNpcFleetSunk) {
-      console.log("player wins");
+      // Renders winner in the GameOver screen
+      this.view.renderWinnerAnnouncement("YOU WIN");
+      this.view.renderGameOverMessage(
+        "Mission accomplished, Captain! You truly are the master of the seas.",
+      );
+      this.isGameOver = true;
       //Open GameOver Menu
     }
+    // move up after test
+    this.view.renderWinnerAnnouncement("YOU WIN");
+    this.view.renderGameOverMessage(
+      "Mission accomplished, Captain! You truly are the master of the seas.",
+    );
+    // Opens dialog if game is over
     this.view.dialog.showModal();
   }
 
   toggleTurn() {
     // Check after every turn, if there is a winner
-    this.isGameOver();
+    this.checkGameOver();
     // Toggles depending on which players turn is
     this.playerTurn = !this.playerTurn;
     return this.playerTurn;
@@ -125,6 +150,8 @@ class GameController {
   }
 
   shootNpcShip(event) {
+    // Makes sure shooting is not possible when game is over
+    if (this.isGameOver) return;
     // Makes sure that player only can shot, when it is his turn
     if (!this.playerTurn) return;
     // delete later
@@ -154,6 +181,8 @@ class GameController {
   }
 
   npcAttack() {
+    // Makes sure shooting is not possible when game is over
+    if (this.isGameOver) return;
     console.log("npc turn");
     // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
     const randomCoord = getRandomCoord();
@@ -244,25 +273,9 @@ class GameController {
   startGame() {
     // Game can only start, if all ships are placed
     if (this.gameBoard.fleetPlayer1.length !== 5) return;
-    //Hide html elements from preparation screen
-    this.view.shipContainer.classList.add("hidden");
-    this.view.gameMenu.classList.add("hidden");
-    this.view.gameNarrator.classList.add("hidden");
-    //Renders the Gameboard with coordinates as Data-Attribute
-    this.view.renderGameBoard(this.view.gameBoardNpc);
-    // Remove hidden class from gameBoard-npc
-    this.view.gameBoardFrameNpc.classList.remove("hidden");
-    // Remove hidden class from npc-side
-    this.view.npcSide.classList.remove("hidden");
-    // Remove hidden class for player title
-    this.view.playerSideTitle.classList.remove("hidden");
-    // Remove hidden class for player narrator
-    this.view.playerNarrator.classList.remove("hidden");
-    // Remove hidden class for npc narrator
-    this.view.npcNarrator.classList.remove("hidden");
-    // Add align-boards to align the boards
-    this.view.gameBoardsContainer.classList.add("align-boards");
-    // Initializes the npc board by placing all 5 ships randomly on it
+    // Render battle phase screen
+    this.view.renderBattleScreen();
+    // Place the npc ships on the game field
     this.initializeNpcShipPlacements();
   }
 
@@ -367,8 +380,24 @@ class GameController {
   }
 
   ///////////////////////////////////
+  async playTitleMusic() {
+    if (!this.titleScreenMusic) {
+      this.titleScreenMusic = new Audio(
+        new URL("./assets/sounds/title-screen.mp3", import.meta.url),
+      );
+
+      this.titleScreenMusic.loop = true;
+    }
+
+    try {
+      await this.titleScreenMusic.play();
+    } catch (error) {
+      console.warn("Playback failed:", error);
+    }
+    this.view.arcadeOverlay.classList.add("hidden");
+  }
+
   init() {
-    console.log("Init App");
     //Renders the Gameboard with axis, coordinates as Data-Attribute
     this.view.renderGameBoard(this.view.gameBoard);
     //Type narrator message
@@ -386,21 +415,36 @@ class GameController {
       ship.disabled = false;
     }
     //Remove all placed classes from the gameFields
-    for (let gameField of this.view.gameBoard.children) {
-      gameField.classList.remove("placed");
-    }
+    this.view.clearShipClasses(this.view.gameBoard);
+    //Make all ship units visible again
+    this.view.showShipUnits();
+    //Play sound on reset
     const clickSound = new Audio("path/to/sound.mp3");
     clickSound.play();
-
-    ///need to remove all ship classes here
   }
 
   resetGame() {
+    // Resets Placement phase
+    this.resetShipPlacement();
+    // Resets battle phase npc side
+    this.view.clearShipClasses(this.view.gameBoardNpc);
     console.log("reset game");
+    //Re render the ship placement screen
+    this.view.renderShipPlacementScreen();
+    // Reset the npc fleet
+    this.gameBoard.fleetNpc = [];
+    console.log(this.gameBoard.fleetNpc);
+    //Play sound on reset
+    const clickSound = new Audio("path/to/sound.mp3");
+    clickSound.play();
+  }
+
+  startPreparation() {
+    this.view.gameFrameCenter.classList.remove("hidden");
+    this.view.titleScreen.classList.add("hidden");
+    this.titleScreenMusic.stop();
   }
 }
 
 export { GameController };
-//Today Goal; add delay between every shot, integrate isGameOver logic, integrate game over screen basic
-
-//Tomorrow remove all ship classes or think about it rework both resets
+//Today Rework shipPlacementPhase reset and add full GameReset, display dynamic winner and message, add title screen, add title screen music, add title screen overlay insert coin

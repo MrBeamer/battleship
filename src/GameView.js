@@ -27,11 +27,85 @@ class GameView {
     this.playerSideTitle = document.querySelector(".player-side-title");
     this.dialog = document.querySelector("dialog");
     this.resetGameBtn = document.querySelector(".btn-reset-game");
+    this.gameOverMessage = document.querySelector(".game-over-message");
+    this.winnerAnnouncement = document.querySelector(".announcement-winner");
+    this.gameFrameCenter = document.querySelector(".game-frame-center");
+    this.gameStartBtn = document.querySelector(".btn-game-start");
+    this.titleScreen = document.querySelector(".game-starting-screen");
+    this.insertCoinBtn = document.querySelector(".btn-insert-coin");
+    this.arcadeOverlay = document.querySelector(".arcade-overlay");
   }
 
   hideShipUnits(selectedShip) {
     selectedShip.querySelector(".ship-unit-container").style.visibility =
       "hidden";
+  }
+
+  renderBattleScreen() {
+    //Hide html elements from preparation screen
+    this.shipContainer.classList.add("hidden");
+    this.gameMenu.classList.add("hidden");
+    this.gameNarrator.classList.add("hidden");
+    //Renders the Gameboard with coordinates as Data-Attribute
+    this.renderGameBoard(this.gameBoardNpc);
+    // Remove hidden class from gameBoard-npc
+    this.gameBoardFrameNpc.classList.remove("hidden");
+    // Remove hidden class from npc-side
+    this.npcSide.classList.remove("hidden");
+    // Remove hidden class for player title
+    this.playerSideTitle.classList.remove("hidden");
+    // Remove hidden class for player narrator
+    this.playerNarrator.classList.remove("hidden");
+    // Remove hidden class for npc narrator
+    this.npcNarrator.classList.remove("hidden");
+    // Add align-boards to align the boards
+    this.gameBoardsContainer.classList.add("align-boards");
+  }
+
+  renderShipPlacementScreen() {
+    this.shipContainer.classList.remove("hidden");
+    this.gameMenu.classList.remove("hidden");
+    this.gameNarrator.classList.remove("hidden");
+    // Add hidden class from gameBoard-npc
+    this.gameBoardFrameNpc.classList.add("hidden");
+    // Add hidden class from npc-side
+    this.npcSide.classList.add("hidden");
+    // Add hidden class for player title
+    this.playerSideTitle.classList.add("hidden");
+    // Add hidden class for player narrator
+    this.playerNarrator.classList.add("hidden");
+    // Add hidden class for npc narrator
+    this.npcNarrator.classList.add("hidden");
+    // Remove align-boards to align the boards
+    this.gameBoardsContainer.classList.remove("align-boards");
+  }
+
+  showShipUnits() {
+    for (let ship of this.shipContainer.children) {
+      ship.querySelector(".ship-unit-container").style.visibility = "visible";
+    }
+  }
+
+  renderWinnerAnnouncement(winner) {
+    this.winnerAnnouncement.textContent = winner;
+  }
+
+  renderGameOverMessage(message) {
+    this.gameOverMessage.textContent = message;
+  }
+
+  clearShipClasses(gameBoard) {
+    for (let gameField of gameBoard.children) {
+      gameField.classList.remove("placed");
+      gameField.classList.remove("preview");
+      gameField.classList.remove("ship-unit-destroyer");
+      gameField.classList.remove("ship-unit-cruiser");
+      gameField.classList.remove("ship-unit-dreadnought");
+      gameField.classList.remove("ship-unit-corvette");
+      gameField.classList.remove("ship-unit-frigate");
+      gameField.classList.remove("miss");
+      gameField.classList.remove("hit");
+    }
   }
 
   renderGameBoard(gameBoard) {

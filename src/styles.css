@@ -10,8 +10,9 @@
   padding: 0;
   box-sizing: border-box;
   /* better font Press Start 2P */
-  font-family: "Fredoka", sans-serif;
-  font-optical-sizing: auto;
+  /* font-family: "Fredoka", sans-serif; */
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -29,6 +30,99 @@ body {
   align-items: center;
   width: 100%;
   gap: 10px;
+}
+
+/* Game Starting screen */
+.game-starting-screen {
+  background-image: url("./public/start_screen.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-game-start {
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+
+  padding: 20px 40px;
+  font-size: 24px;
+
+  /* Solid base */
+  background-color: transparent;
+  border: 4px solid #00ffff; /* Primary neon cyan */
+
+  /* The layered neon glow effect */
+  box-shadow:
+    inset 0 0 10px #00ffff,
+    /* Inner glow */ 0 0 10px #00ffff,
+    /* Tight outer glow */ 0 0 30px #00ffff; /* Wide, diffuse outer glow */
+
+  /* For an extra retro feel, keep transitions snappy, not smooth */
+  transition: all 0.1s step-end;
+}
+
+.btn-game-start:hover {
+  background-color: #00ffff;
+  color: #000000; /* Dark text for contrast against the active color */
+
+  /* Intensify the outer glow when active */
+  box-shadow:
+    0 0 20px #00ffff,
+    0 0 50px #00ffff;
+}
+
+/* The dark screen covering everything */
+.arcade-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100dvh;
+  background-color: rgba(5, 5, 15, 0.9); /* Deep space navy background */
+  z-index: 9999; /* Ensures it sits on top of all other game UI */
+
+  /* Flexbox to center the text perfectly */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer; /* Turns the mouse into a pointer so they know to click */
+  transition: opacity 0.5s ease-out; /* Smooth fade out when clicked */
+}
+
+/* The retro blinking text */
+.btn-insert-coin {
+  font-size: 2rem;
+  color: white; /* Neon cyan */
+  text-transform: uppercase;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+
+  /* Gives it that CRT monitor glow */
+  /* text-shadow:
+    0 0 10px #00ffff,
+    0 0 20px #00ffff; */
+
+  /* The blinking animation */
+  animation: blink 1.5s step-end infinite;
+}
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* GameBoard Frame Player */
@@ -468,6 +562,7 @@ dialog {
   position: absolute;
   top: 40%;
   left: 40%;
+  border-radius: 0.5rem;
 }
 
 dialog[open] {
@@ -479,7 +574,7 @@ dialog[open] {
   align-items: center;
 }
 
-.game-over-title {
+.announcement-winner {
   margin-bottom: 15px;
 }
 
