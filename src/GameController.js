@@ -22,8 +22,8 @@ class GameController {
     this.view.gameStartBtn.addEventListener("click", (event) => {
       this.startPreparation(event);
     });
-    this.view.insertCoinBtn.addEventListener("click", (event) => {
-      this.playTitleMusic(event);
+    this.view.arcadeOverlay.addEventListener("click", (event) => {
+      this.insertCoin(event);
     });
 
     // For hover, preselect phase
@@ -283,7 +283,7 @@ class GameController {
     const rotateBtn = event.target.closest(".btn-rotate");
     if (!rotateBtn) return;
     this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
-    this.view.rotateBtn.textContent = `Rotate Ship (${this.shipAxis === "Y" ? "X" : "Y"})`;
+    this.view.rotateBtn.textContent = `Rotate Ship`;
   }
 
   handleSelectShip(event) {
@@ -380,7 +380,7 @@ class GameController {
   }
 
   ///////////////////////////////////
-  async playTitleMusic() {
+  async insertCoin() {
     if (!this.titleScreenMusic) {
       this.titleScreenMusic = new Audio(
         new URL("./assets/sounds/title-screen.mp3", import.meta.url),
@@ -442,9 +442,10 @@ class GameController {
   startPreparation() {
     this.view.gameFrameCenter.classList.remove("hidden");
     this.view.titleScreen.classList.add("hidden");
-    this.titleScreenMusic.stop();
+    this.titleScreenMusic.pause();
   }
 }
 
 export { GameController };
-//Today Rework shipPlacementPhase reset and add full GameReset, display dynamic winner and message, add title screen, add title screen music, add title screen overlay insert coin
+//Today Add Coin as cursor for the arcade overlay screen,
+// Rework the prep screen and and sounds to the buttons

@@ -1,8 +1,11 @@
 :root {
-  --gameboard-frame-player: rgba(15, 30, 90, 0.35);
-  --game-field: rgba(8, 25, 70, 0.65);
+  --gameboard-frame-player: oklch(0.22 0.08 265 / 0.85);
+  --game-field: oklch(0.18 0.06 270 / 0.4);
   --game-topbar: rgba(15, 30, 90, 0.4);
   --game-menu: rgba(15, 30, 90, 0.4);
+  --background: oklch(0.22 0.08 265 / 0.85);
+
+  --primary: oklch(0.82 0.15 200);
 }
 
 * {
@@ -17,7 +20,7 @@
 }
 
 body {
-  background-image: url("./public/space_bg.svg");
+  background: url("./public/space-bg.png"), var(--background);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -92,7 +95,9 @@ body {
   justify-content: center;
   align-items: center;
 
-  cursor: pointer; /* Turns the mouse into a pointer so they know to click */
+  /* cursor: pointer; Turns the mouse into a pointer so they know to click */
+
+  cursor: url("./public/coin.png"), auto;
   transition: opacity 0.5s ease-out; /* Smooth fade out when clicked */
 }
 
@@ -112,6 +117,7 @@ body {
 
   /* The blinking animation */
   animation: blink 1.5s step-end infinite;
+  cursor: url("./public/coin.png"), auto;
 }
 @keyframes blink {
   0% {
@@ -133,7 +139,6 @@ body {
   border-radius: 0.5rem;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  /* grid-template-columns: auto 1fr 180px; */
   grid-template-rows: auto auto auto;
   grid-template-areas:
     ". game-x-axis-player ship-container"
@@ -142,7 +147,7 @@ body {
   padding-bottom: 10px;
   padding-top: 15px;
   padding-right: 20px;
-  border-color: rgba(100, 160, 255, 0.35);
+  /* border: 2px solid color-mix(in oklab, var(--primary) 25%, transparent); */
 }
 
 .game-x-axis-player {
@@ -175,7 +180,7 @@ body {
 
   border-radius: 0.5rem;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto auto auto;
   grid-template-areas:
     ".                gameXaxisNpc"
@@ -257,9 +262,9 @@ body {
   border-radius: 0.5rem;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #c8e8ff;
+  background-color: oklch(0.22 0.09 25);
+  color: oklch(0.78 0.2 25);
+  border: 2px solid oklch(0.78 0.2 25);
 }
 
 .btn-start {
@@ -277,9 +282,9 @@ body {
   cursor: pointer;
   border-radius: 0.5rem;
   padding: 10px 20px;
-  background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #c8e8ff;
+  background-color: oklch(0.24 0.07 200);
+  border: 2px solid oklch(0.85 0.15 200);
+  color: oklch(0.85 0.15 200);
 }
 
 .btn-reset-game {
@@ -305,13 +310,15 @@ body {
 /* Ship */
 
 .ship {
+  font-size: 12px;
   border: none;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: rgba(20, 40, 110, 0.5);
-  width: 115px;
+  /* width: 115px; */
+  width: 150px;
   height: 100px;
   color: white;
   cursor: pointer;
@@ -429,6 +436,7 @@ body {
 /* Player Side */
 
 .player-side-title {
+  font-size: 20px;
   color: #c8e8ff;
   background-color: rgba(15, 30, 90, 0.35);
   padding: 15px 0 0 15px;
@@ -455,8 +463,12 @@ body {
 }
 
 /* Npc Side */
+.npc-side {
+  width: 588px;
+}
 
 .npc-side-title {
+  font-size: 20px;
   color: #f0a800;
   background-color: rgba(15, 30, 90, 0.35);
   padding: 15px 0 0 15px;
@@ -488,10 +500,8 @@ body {
   grid-area: gameboard-player;
   display: grid;
   grid-template-columns: repeat(10, 50px);
-  /* border: 2px solid #1a4a8a; */
   grid-template-rows: repeat(10, 50px);
   height: 500px;
-  gap: 2px;
 }
 
 /* GameBoard Npc */
@@ -503,23 +513,15 @@ body {
   /* border: 2px solid #1a4a8a; */
   grid-template-rows: repeat(10, 50px);
   height: 500px;
-  gap: 2px;
 }
-
-/* .gameboard-field:nth-child(odd) {
-  background-color: rgba(5, 20, 60, 0.7);
-}
-
-.gameboard-field:nth-child(even) {
-  background-color: rgba(8, 25, 70, 0.65);
-} */
 
 .gameboard-field {
   width: 100%;
   background-color: var(--game-field);
-  border: 1px solid #0d2a60;
+  border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
   user-select: none;
   cursor: crosshair;
+  background-color: color-mix(in oklab, var(--background) 40%, transparent);
 }
 
 /* Selection States of Ship placement */
@@ -569,7 +571,7 @@ dialog[open] {
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  padding: 25px 40px 25px 40px;
+  padding: 25px 28px 25px 28px;
   justify-content: center;
   align-items: center;
 }

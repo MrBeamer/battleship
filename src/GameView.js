@@ -32,7 +32,6 @@ class GameView {
     this.gameFrameCenter = document.querySelector(".game-frame-center");
     this.gameStartBtn = document.querySelector(".btn-game-start");
     this.titleScreen = document.querySelector(".game-starting-screen");
-    this.insertCoinBtn = document.querySelector(".btn-insert-coin");
     this.arcadeOverlay = document.querySelector(".arcade-overlay");
   }
 
@@ -151,7 +150,7 @@ class GameView {
     for (let i = 1; i <= 100; i++) {
       gameBoard.insertAdjacentHTML(
         "beforeend",
-        `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}">${getCoordinatesLetters(i)}-${getCoordinatesNumbers(i)}</div>`,
+        `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}"></div>`,
       );
     }
   }
