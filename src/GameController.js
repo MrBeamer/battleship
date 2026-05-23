@@ -4,6 +4,7 @@ import { Ship } from "./Ship.js";
 import { getRandomShipAxis } from "./helper.js";
 import { getRandomCoord } from "./helper.js";
 import { lookUpShipType } from "./helper.js";
+import { playSound } from "./helper.js";
 
 class GameController {
   view = new GameView();
@@ -74,13 +75,14 @@ class GameController {
     );
     if (isPlayerFleetSunk) {
       // Renders winner in the GameOver screen
-      this.view.renderWinnerAnnouncement("NPC WIN");
+      this.view.renderWinnerAnnouncement("YOU LOSE");
       this.view.renderGameOverMessage(
         "We lost the battle, Captain. Better luck on the next voyage.",
       );
       this.isGameOver = true;
       //Open GameOver Menu
       this.view.dialog.showModal();
+      playSound("game-lost");
     } else if (isNpcFleetSunk) {
       // Renders winner in the GameOver screen
       this.view.renderWinnerAnnouncement("YOU WIN");
@@ -89,14 +91,15 @@ class GameController {
       );
       this.isGameOver = true;
       //Open GameOver Menu
+      this.view.dialog.showModal();
+      playSound("game-won");
     }
     // move up after test
-    this.view.renderWinnerAnnouncement("YOU WIN");
-    this.view.renderGameOverMessage(
-      "Mission accomplished, Captain! You truly are the master of the seas.",
-    );
+    // this.view.renderWinnerAnnouncement("YOU WIN");
+    // this.view.renderGameOverMessage(
+    //   "Mission accomplished, Captain! You truly are the master of the seas.",
+    // );
     // Opens dialog if game is over
-    this.view.dialog.showModal();
   }
 
   toggleTurn() {
@@ -121,6 +124,7 @@ class GameController {
       // If field has ship unit, add hit to the div
       if (hit) {
         console.log("hit");
+        playSound("hit-ship");
         shootingTargetField.classList.add("hit");
         // add here helper function with updates ship that its hit
         const hitShip = fleet.find((ship) => {
@@ -134,17 +138,17 @@ class GameController {
           //play sound
           // make ship visible
           console.log("ship is sunk");
+          playSound("sunk-ship");
         }
+
         return hit;
       }
     }
     // If field has no ship unit, add miss to the div
     if (!hit) {
       shootingTargetField.classList.add("miss");
-      console.log("miss");
-      /// helper function move away, npc turn
-      // if computer turn disable click event for player with if playerTurn is false return
-      //   toggleTurn();
+      //Play sound if you miss
+      playSound("miss-ship");
     }
     return hit;
   }
@@ -277,13 +281,15 @@ class GameController {
     this.view.renderBattleScreen();
     // Place the npc ships on the game field
     this.initializeNpcShipPlacements();
+    playSound("menu");
   }
 
   rotateShip(event) {
     const rotateBtn = event.target.closest(".btn-rotate");
     if (!rotateBtn) return;
     this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
-    this.view.rotateBtn.textContent = `Rotate Ship`;
+    // Control Sound
+    playSound("menu");
   }
 
   handleSelectShip(event) {
@@ -301,6 +307,8 @@ class GameController {
     this.selectedShip = selectedShip;
 
     console.log(selectedShip);
+    //Play sound on select
+    playSound("select-ship");
   }
 
   handlePlaceShip(event) {
@@ -320,6 +328,7 @@ class GameController {
       // Lookup correct ship class, to color field in the ship color
       const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
       field.classList.add("placed", shipTypeClass);
+      playSound("deploy-ship");
     });
 
     // If a ship is selected create an ship object and push into the fleetPlayer1 array
@@ -400,8 +409,6 @@ class GameController {
   init() {
     //Renders the Gameboard with axis, coordinates as Data-Attribute
     this.view.renderGameBoard(this.view.gameBoard);
-    //Type narrator message
-    this.view.renderNarratorMessage();
   }
 
   resetShipPlacement() {
@@ -419,8 +426,7 @@ class GameController {
     //Make all ship units visible again
     this.view.showShipUnits();
     //Play sound on reset
-    const clickSound = new Audio("path/to/sound.mp3");
-    clickSound.play();
+    playSound("menu");
   }
 
   resetGame() {
@@ -442,10 +448,15 @@ class GameController {
   startPreparation() {
     this.view.gameFrameCenter.classList.remove("hidden");
     this.view.titleScreen.classList.add("hidden");
+    //Type narrator message
+    this.view.renderNarratorMessage();
     this.titleScreenMusic.pause();
   }
 }
 
 export { GameController };
 //Today Add Coin as cursor for the arcade overlay screen,
-// Rework the prep screen and and sounds to the buttons
+// Today second phase: Rework the prep screen, add sounds to the buttons, add hit and miss sounds when firing on ships, add sound when player wins, add sound when player lost,
+
+//tomorrow hide ships from npc
+// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again, add random rendering messages when ship fires , change chip colors

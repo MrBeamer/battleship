@@ -24,4 +24,27 @@ const lookUpShipType = (shipType) => {
   return lookUp[shipType];
 };
 
-export { getRandomShipAxis, getRandomCoord, lookUpShipType };
+const playSound = async (soundName) => {
+  const soundFiles = {
+    "deploy-ship": new URL("./assets/sounds/deploy-ship.mp3", import.meta.url),
+    menu: new URL("./assets/sounds/menu.mp3", import.meta.url),
+    "hit-ship": new URL("./assets/sounds/hit-ship.mp3", import.meta.url),
+    "miss-ship": new URL("./assets/sounds/miss-ship.mp3", import.meta.url),
+    "select-ship": new URL("./assets/sounds/select-ship.mp3", import.meta.url),
+    "sunk-ship": new URL("./assets/sounds/sunk-ship.mp3", import.meta.url),
+    "game-won": new URL("./assets/sounds/game-won.mp3", import.meta.url),
+    "game-lost": new URL("./assets/sounds/game-lost.mp3", import.meta.url),
+  };
+  console.log(soundName);
+  const sound = new Audio(soundFiles[soundName]);
+  sound.loop = false;
+  sound.volume = 1;
+
+  try {
+    await sound.play();
+  } catch (err) {
+    console.error("Audio playback failed:", err);
+  }
+};
+
+export { getRandomShipAxis, getRandomCoord, lookUpShipType, playSound };

@@ -175,10 +175,10 @@ class GameView {
 
     new Typewriter(".narrator-message", {
       strings:
-        "Click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
+        "Captain, click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
       autoStart: true,
       loop: false,
-      delay: 30,
+      delay: 50,
     });
   }
 

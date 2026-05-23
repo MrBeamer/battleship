@@ -35,9 +35,14 @@ body {
   gap: 10px;
 }
 
+.legend-letters,
+.legend-numbers {
+  font-size: 12px;
+}
+
 /* Game Starting screen */
 .game-starting-screen {
-  background-image: url("./public/start_screen.jpeg");
+  background-image: url("./public/title-screen.png");
   background-repeat: no-repeat;
   background-size: cover;
   width: 100%;
@@ -143,9 +148,9 @@ body {
   grid-template-areas:
     ". game-x-axis-player ship-container"
     "game-y-axis-player gameboard-player ship-container"
-    "game-y-axis-player footer ship-container";
+    ". . ship-container";
   padding-bottom: 10px;
-  padding-top: 15px;
+  padding-top: 20px;
   padding-right: 20px;
   /* border: 2px solid color-mix(in oklab, var(--primary) 25%, transparent); */
 }
@@ -157,6 +162,7 @@ body {
   align-items: center;
   user-select: none;
   color: #ff9f1c;
+  padding-bottom: 12px;
 }
 
 .game-y-axis-player {
@@ -167,7 +173,6 @@ body {
   align-items: center;
   padding-right: 12px;
   padding-left: 19px;
-  margin-bottom: 15px;
   user-select: none;
   color: #ff9f1c;
 }
@@ -187,7 +192,7 @@ body {
     "gameYaxisNpc     gameboardNpc"
     "gameYaxisNpc     .";
   padding-bottom: 10px;
-  padding-top: 15px;
+  padding-top: 20px;
   padding-right: 20px;
   border-color: rgba(100, 160, 255, 0.35);
 }
@@ -219,10 +224,11 @@ body {
   padding: 20px;
   display: flex;
   background-color: var(--game-topbar);
-  border: 1px solid rgba(240, 168, 0, 0.35);
+  border: 1px solid #ff9f1c;
+
   width: 100%;
   height: auto;
-  max-width: 775px;
+  max-width: 797px;
   border-radius: 0.5rem;
   align-items: center;
   margin-top: 10px;
@@ -234,6 +240,7 @@ body {
 }
 
 .narrator-message {
+  font-size: 12px;
   line-height: 1.4;
   font-weight: 500;
   color: #c8e8ff;
@@ -242,13 +249,17 @@ body {
 }
 
 /* Game Menu */
+
+.material-icons {
+  margin-right: 5px;
+}
 .game-menu {
   padding: 0 20px;
   display: flex;
   background-color: var(--game-menu);
   width: 100%;
   height: 89px;
-  max-width: 775px;
+  max-width: 797px;
   border-radius: 0.5rem;
   justify-content: space-between;
   align-items: center;
@@ -258,9 +269,12 @@ body {
 /* Buttons */
 
 .btn-reset {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
   border: none;
   border-radius: 0.5rem;
-  padding: 10px 20px;
+  padding: 10px 25px;
   cursor: pointer;
   background-color: oklch(0.22 0.09 25);
   color: oklch(0.78 0.2 25);
@@ -268,33 +282,40 @@ body {
 }
 
 .btn-start {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
   border: none;
   border-radius: 0.5rem;
-  padding: 10px 20px;
+  padding: 10px 25px;
   cursor: pointer;
-  background-color: #002a00;
-  border-color: #00aa33;
-  color: #00ff66;
+  background-color: oklch(0.24 0.08 145);
+  color: oklch(0.82 0.22 145);
+  border: 2px solid oklch(0.82 0.22 145);
 }
 
 .btn-rotate {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
   border: none;
   cursor: pointer;
   border-radius: 0.5rem;
-  padding: 10px 20px;
+  padding: 10px 25px;
   background-color: oklch(0.24 0.07 200);
   border: 2px solid oklch(0.85 0.15 200);
   color: oklch(0.85 0.15 200);
 }
 
 .btn-reset-game {
+  min-height: 58px;
   border: none;
   border-radius: 0.5rem;
-  padding: 10px 20px;
+  padding: 10px 25px;
   cursor: pointer;
-  background-color: #002a00;
-  border-color: #00aa33;
-  color: #00ff66;
+  background-color: oklch(0.24 0.08 145);
+  color: oklch(0.82 0.22 145);
+  border: 2px solid oklch(0.82 0.22 145);
 }
 /* Fleet Selection */
 
@@ -436,7 +457,7 @@ body {
 /* Player Side */
 
 .player-side-title {
-  font-size: 20px;
+  font-size: 18px;
   color: #c8e8ff;
   background-color: rgba(15, 30, 90, 0.35);
   padding: 15px 0 0 15px;
@@ -455,6 +476,7 @@ body {
 }
 
 .player-narrator-message {
+  font-size: 12px;
   line-height: 1.4;
   font-weight: 500;
   color: #c8e8ff;
@@ -468,7 +490,7 @@ body {
 }
 
 .npc-side-title {
-  font-size: 20px;
+  font-size: 18px;
   color: #f0a800;
   background-color: rgba(15, 30, 90, 0.35);
   padding: 15px 0 0 15px;
@@ -478,7 +500,7 @@ body {
   padding: 20px;
   display: flex;
   background-color: var(--game-topbar);
-  border: 1px solid rgba(240, 168, 0, 0.35);
+  border: 1px solid #be2fcc;
   width: 100%;
   height: auto;
   border-radius: 0.5rem;
@@ -487,6 +509,7 @@ body {
 }
 
 .npc-narrator-message {
+  font-size: 12px;
   line-height: 1.4;
   font-weight: 500;
   color: #c8e8ff;
@@ -568,7 +591,7 @@ dialog {
 }
 
 dialog[open] {
-  max-width: 400px;
+  max-width: 435px;
   display: flex;
   flex-direction: column;
   padding: 25px 28px 25px 28px;
