@@ -1,4 +1,5 @@
 import Typewriter from "typewriter-effect/dist/core";
+import { villainTaunts, antiHeroTaunts, getRandomNumber } from "./helper.js";
 
 class GameView {
   currentTargetFields = [];
@@ -40,6 +41,19 @@ class GameView {
       "hidden";
   }
 
+  displaySunkNpcShip(ship, shipTypeClass) {
+    // position array of cords
+    console.log(ship);
+    console.log(ship.position);
+    ship.position.forEach((coord) => {
+      for (let field of this.gameBoardNpc.children) {
+        if (field.dataset.coords == coord) {
+          field.classList.add("placed", shipTypeClass);
+        }
+      }
+    });
+  }
+
   renderBattleScreen() {
     //Hide html elements from preparation screen
     this.shipContainer.classList.add("hidden");
@@ -59,6 +73,9 @@ class GameView {
     this.npcNarrator.classList.remove("hidden");
     // Add align-boards to align the boards
     this.gameBoardsContainer.classList.add("align-boards");
+    // Add removeStyling to align gameBoards
+    this.gameAxisX.classList.add("remove-styling");
+    this.gameAxisY.classList.add("add-styling");
   }
 
   renderShipPlacementScreen() {
@@ -161,6 +178,32 @@ class GameView {
       console.log(gameField);
     }
   };
+
+  renderBattleMessage(playerTurn, action) {
+    console.log(playerTurn);
+    console.log(action);
+    if (playerTurn) {
+      new Typewriter(".player-narrator-message-battle", {
+        strings:
+          action === "hit"
+            ? antiHeroTaunts.hit[getRandomNumber(antiHeroTaunts.hit.length)]
+            : antiHeroTaunts.miss[getRandomNumber(antiHeroTaunts.miss.length)],
+        autoStart: true,
+        loop: false,
+        delay: 20,
+      });
+    } else {
+      new Typewriter(".npc-narrator-message-battle", {
+        strings:
+          action === "hit"
+            ? villainTaunts.hit[getRandomNumber(villainTaunts.hit.length)]
+            : villainTaunts.miss[getRandomNumber(villainTaunts.miss.length)],
+        autoStart: true,
+        loop: false,
+        delay: 20,
+      });
+    }
+  }
 
   renderNarratorMessage() {
     // const test = new Typewriter(".narrator-message", {

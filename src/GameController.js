@@ -113,17 +113,13 @@ class GameController {
   processAttack(shootingTargetField, targetCoord, fleet) {
     // Saves hit boolean true or false
     let hit = null;
-    console.log(targetCoord);
-    console.log(shootingTargetField);
     for (let ship of fleet) {
-      console.log(ship.position);
       hit = ship.position.some((coord) => {
         return coord === targetCoord;
       });
-      console.log(hit);
       // If field has ship unit, add hit to the div
       if (hit) {
-        console.log("hit");
+        this.view.renderBattleMessage(this.playerTurn, "hit");
         playSound("hit-ship");
         shootingTargetField.classList.add("hit");
         // add here helper function with updates ship that its hit
@@ -135,9 +131,10 @@ class GameController {
         // Checks after every hit if ship is sunk
         const isShipSunk = hitShip.isSunk();
         if (isShipSunk) {
-          //play sound
-          // make ship visible
           console.log("ship is sunk");
+          // Get ship type to display correct sunk ship
+          const shipType = lookUpShipType(hitShip.type);
+          this.view.displaySunkNpcShip(hitShip, shipType);
           playSound("sunk-ship");
         }
 
@@ -147,6 +144,7 @@ class GameController {
     // If field has no ship unit, add miss to the div
     if (!hit) {
       shootingTargetField.classList.add("miss");
+      this.view.renderBattleMessage(this.playerTurn, "miss");
       //Play sound if you miss
       playSound("miss-ship");
     }
@@ -171,7 +169,8 @@ class GameController {
       return;
     // Gets the coordinate from target
     const targetCoord = shootingTargetField.dataset.coords;
-    const isHit = this.processAttack(
+    // shoot the Npc ship
+    this.processAttack(
       shootingTargetField,
       targetCoord,
       this.gameBoard.fleetNpc,
@@ -256,21 +255,20 @@ class GameController {
         // Lookup correct ship class, to color field in the ship color
         const shipTypeClass = lookUpShipType(ship.type);
         // replace later one with other class, because should be hidden and only visible on hit
-        field.classList.add("placed", shipTypeClass);
+        // field.classList.add("placed", shipTypeClass);
+        //testing
+        field.classList.add("placed");
       });
 
       // Data: Update ship with coordinates and axis
-      const upDateShip = () => {
-        ship.position = selectedShipCoords;
-        ship.axis = randomShipAxis;
-      };
-      upDateShip();
+      ship.position = selectedShipCoords;
+      ship.axis = randomShipAxis;
 
       // Push the updated ship into the fleet array
       this.gameBoard.fleetNpc.push(ship);
     }); // end of ship for each currently
     console.log(this.gameBoard.fleetNpc);
-    console.log(this.view.currentTargetFields);
+    // console.log(this.view.currentTargetFields);
   }
 
   /////////////////////////////////////
@@ -305,8 +303,6 @@ class GameController {
 
     // Safes the selected ship (html element) temporarily
     this.selectedShip = selectedShip;
-
-    console.log(selectedShip);
     //Play sound on select
     playSound("select-ship");
   }
@@ -389,20 +385,29 @@ class GameController {
   }
 
   ///////////////////////////////////
-  async insertCoin() {
-    if (!this.titleScreenMusic) {
-      this.titleScreenMusic = new Audio(
-        new URL("./assets/sounds/title-screen.mp3", import.meta.url),
-      );
+  insertCoin() {
+    //replace this with the helper later
+    const playTitleMusic = async () => {
+      if (!this.titleScreenMusic) {
+        this.titleScreenMusic = new Audio(
+          new URL("./assets/sounds/title-screen.mp3", import.meta.url),
+        );
 
-      this.titleScreenMusic.loop = true;
-    }
+        this.titleScreenMusic.loop = true;
+      }
 
-    try {
-      await this.titleScreenMusic.play();
-    } catch (error) {
-      console.warn("Playback failed:", error);
-    }
+      try {
+        await this.titleScreenMusic.play();
+      } catch (error) {
+        console.warn("Playback failed:", error);
+      }
+    };
+
+    playSound("insert-coin");
+    setTimeout(() => {
+      playTitleMusic();
+    }, 1300);
+
     this.view.arcadeOverlay.classList.add("hidden");
   }
 
@@ -446,6 +451,8 @@ class GameController {
   }
 
   startPreparation() {
+    // Make sure music is loaded before you can start the game
+    if (!this.titleScreenMusic) return;
     this.view.gameFrameCenter.classList.remove("hidden");
     this.view.titleScreen.classList.add("hidden");
     //Type narrator message
@@ -455,8 +462,17 @@ class GameController {
 }
 
 export { GameController };
-//Today Add Coin as cursor for the arcade overlay screen,
-// Today second phase: Rework the prep screen, add sounds to the buttons, add hit and miss sounds when firing on ships, add sound when player wins, add sound when player lost,
+// Today Goal: add random rendering messages when ship fires, add guard clause music loaded before game start,update all ship colors, reworked layout battle phase, Add coin sound to arcade screen, Add npc ships are hidden and only appear when sunk, Add custom hit and mis marker png assets with css before
 
-//tomorrow hide ships from npc
-// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again, add random rendering messages when ship fires , change chip colors
+// Tomorrow
+// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again, fix that if you click to fast shooting on the next ship both narrator can talk, add ship skins
+
+//nice to have i could add with before or after css ship skins
+// example
+// .local-link::before {
+//   content: url("/shared-assets/images/examples/firefox-logo.svg");
+//   display: inline-block;
+//   width: 15px;
+//   height: 15px;
+//   margin-right: 5px;
+// }

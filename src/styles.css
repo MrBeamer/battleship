@@ -164,6 +164,9 @@ body {
   color: #ff9f1c;
   padding-bottom: 12px;
 }
+.remove-styling {
+  padding-bottom: 0;
+}
 
 .game-y-axis-player {
   grid-area: game-y-axis-player;
@@ -175,6 +178,10 @@ body {
   padding-left: 19px;
   user-select: none;
   color: #ff9f1c;
+}
+
+.add-styling {
+  padding-bottom: 8px;
 }
 
 /* GameBoard Frame Npc */
@@ -193,7 +200,7 @@ body {
     "gameYaxisNpc     .";
   padding-bottom: 10px;
   padding-top: 20px;
-  padding-right: 20px;
+  padding-right: 40px;
   border-color: rgba(100, 160, 255, 0.35);
 }
 
@@ -215,6 +222,7 @@ body {
   padding-right: 12px;
   padding-left: 19px;
   margin-bottom: 15px;
+  padding-bottom: 16px;
   user-select: none;
   color: #ff9f1c;
 }
@@ -361,13 +369,21 @@ body {
 }
 
 .ship-unit-dreadnought {
-  background-color: rgba(180, 80, 0, 0.38);
-  border: 0.5px solid #f0a800;
+  background-color: rgba(40, 10, 60, 0.92);
+  border: 0.5px solid #b478ff;
+
+  /* content: url("./public/miss-marker.png");
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px; */
 }
 
 .placed.ship-unit-dreadnought {
-  background-color: rgba(180, 80, 0, 0.38);
-  border: 0.5px solid #f0a800;
+  background-color: rgba(40, 10, 60, 0.92);
+  border: 0.5px solid #b478ff;
 }
 
 .ship-unit-cruiser {
@@ -381,33 +397,33 @@ body {
 }
 
 .ship-unit-destroyer {
-  background-color: rgba(0, 35, 10, 0.92);
-  border: 0.5px solid #00cc55;
+  background-color: rgba(0, 40, 25, 0.92);
+  border: 0.5px solid #3effa0;
 }
 
 .placed.ship-unit-destroyer {
-  background-color: rgba(0, 35, 10, 0.92);
-  border: 0.5px solid #00cc55;
+  background-color: rgba(0, 40, 25, 0.92);
+  border: 0.5px solid#3effa0;
 }
 
 .ship-unit-frigate {
-  background-color: rgba(25, 5, 50, 0.92);
-  border: 0.5px solid #9933ff;
+  background-color: rgba(50, 10, 40, 0.92);
+  border: 0.5px solid #ff5cc8;
 }
 
 .placed.ship-unit-frigate {
-  background-color: rgba(25, 5, 50, 0.92);
-  border: 0.5px solid #9933ff;
+  background-color: rgba(50, 10, 40, 0.92);
+  border: 0.5px solid #ff5cc8;
 }
 
 .ship-unit-corvette {
-  background-color: #8a1000;
-  border: 0.5px solid #ff4433;
+  background-color: rgba(40, 40, 0, 0.92);
+  border: 0.5px solid #ffe566;
 }
 
 .placed.ship-unit-corvette {
-  background-color: #8a1000;
-  border: 0.5px solid #ff4433;
+  background-color: rgba(40, 40, 0, 0.92);
+  border: 0.5px solid #ffe566;
 }
 
 /* Shp States */
@@ -467,7 +483,7 @@ body {
   padding: 20px;
   display: flex;
   background-color: var(--game-topbar);
-  border: 1px solid rgba(240, 168, 0, 0.35);
+  border: 1px solid #ff9f1c;
   width: 100%;
   height: auto;
   border-radius: 0.5rem;
@@ -491,7 +507,7 @@ body {
 
 .npc-side-title {
   font-size: 18px;
-  color: #f0a800;
+  color: #be2fcc;
   background-color: rgba(15, 30, 90, 0.35);
   padding: 15px 0 0 15px;
 }
@@ -515,6 +531,12 @@ body {
   color: #c8e8ff;
   letter-spacing: 0.5px;
   user-select: none;
+  min-width: 475px;
+}
+
+.npc-narrator-img {
+  height: 45px;
+  margin-left: 10px;
 }
 
 /* GameBoard Player */
@@ -539,8 +561,8 @@ body {
 }
 
 .gameboard-field {
+  position: relative;
   width: 100%;
-  background-color: var(--game-field);
   border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
   user-select: none;
   cursor: crosshair;
@@ -555,7 +577,9 @@ body {
 }
 
 .placed {
-  background-color: #dff1f1;
+  /* background-color: #dff1f1; */
+  background-color: color-mix(in oklab, var(--background) 40%, transparent);
+  border: 1px solid color-mix(in oklab, var(--primary) 25%, transparent);
 }
 
 .overlapping {
@@ -575,11 +599,33 @@ body {
 }
 
 .hit {
-  background-color: red !important;
+  /* background-color: #ff3333 !important;
+  box-shadow: 0 0 6px 2px rgba(255, 51, 51, 0.5); */
+}
+
+.hit::before {
+  content: url("./public/hit-marker.png");
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
 }
 
 .miss {
-  background-color: white !important;
+  /* background-color: #4488aa !important;
+  box-shadow: 0 0 6px 2px rgba(68, 136, 170, 0.4); */
+}
+
+.miss::before {
+  content: url("./public/miss-marker.png");
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
 }
 
 /* Dialog  */
