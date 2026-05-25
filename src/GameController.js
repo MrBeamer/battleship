@@ -92,14 +92,11 @@ class GameController {
       this.isGameOver = true;
       //Open GameOver Menu
       this.view.dialog.showModal();
-      playSound("game-won");
+      // Delay winning sound so its overlapping with explosion
+      setTimeout(() => {
+        playSound("game-won");
+      }, 1300);
     }
-    // move up after test
-    // this.view.renderWinnerAnnouncement("YOU WIN");
-    // this.view.renderGameOverMessage(
-    //   "Mission accomplished, Captain! You truly are the master of the seas.",
-    // );
-    // Opens dialog if game is over
   }
 
   toggleTurn() {
@@ -132,21 +129,20 @@ class GameController {
         const isShipSunk = hitShip.isSunk();
         if (isShipSunk) {
           console.log("ship is sunk");
-          // Get ship type to display correct sunk ship
-          //   const shipType = lookUpShipType(hitShip.type);
           const firstCoord = hitShip.position[0]; // needs to a field
           const shipType = hitShip.type;
           const shipAxis = hitShip.axis;
           const shipLength = hitShip.length;
-          //   this.view.displaySunkNpcShip(hitShip, shipType);
-          //   this.view.placeShipImg(firstField, shipLength, shipAxis, shipType);
-          this.view.displaySunkNpcShip(
-            firstCoord,
-            shipLength,
-            shipAxis,
-            shipType,
-          );
+
           playSound("sunk-ship");
+          // Make sure sunk ship is only displayed, if player sinks a ship not npc
+          if (this.playerTurn)
+            this.view.displaySunkNpcShip(
+              firstCoord,
+              shipLength,
+              shipAxis,
+              shipType,
+            );
         }
 
         return hit;
@@ -198,20 +194,18 @@ class GameController {
     // Makes sure shooting is not possible when game is over
     if (this.isGameOver) return;
     console.log("npc turn");
-    // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
-    const randomCoord = getRandomCoord();
+
     // instead of human clicking on gameField (dataType is html element), this returns a random one
-    const randomShootingTargetField = this.view.getRandomFieldClickNpc(
-      randomCoord,
-      this.view.gameBoard,
-    );
-    const isHit = this.processAttack(
-      randomShootingTargetField,
-      randomCoord,
+    ////////
+    const randomElement = this.view.getRandomFieldClickNpcTest();
+    console.log(randomElement);
+    ///
+    this.processAttack(
+      randomElement.field,
+      randomElement.coord,
       this.gameBoard.fleetPlayer1,
     );
     // After miss shot, next players turn
-    console.log(this.gameBoard.fleetPlayer1);
     // Text message should not overlap if players turn is delayed it should be fixed
     setTimeout(() => {
       this.toggleTurn();
@@ -344,6 +338,10 @@ class GameController {
     const shipLength = this.selectedShip.dataset.shipLength;
     const shipAxis = this.selectedShip.dataset.shipDirection;
     const shipType = this.selectedShip.dataset.shipType;
+
+    // Remove class preview that highlights divs for ship placement
+    this.view.clearFieldHighlights();
+    // Place ship img on field
     this.view.placeShipImg(startField, shipLength, shipAxis, shipType);
     playSound("deploy-ship");
 
@@ -370,7 +368,6 @@ class GameController {
     );
     // Add ship to gameBoard (fleetPlayer1 array) - data
     this.gameBoard.placeShip(ship);
-    console.log(ship);
     console.log(this.gameBoard.fleetPlayer1);
     // If ship is placed on the board, disable the ship button, so user can not pick it again
     this.selectedShip.disabled = true;
@@ -411,7 +408,7 @@ class GameController {
   }
 
   handlePointerOut() {
-    // Remove class that highlights divs for ship placement preview
+    // Remove class preview that highlights divs for ship placement
     this.view.clearFieldHighlights();
   }
 
@@ -459,6 +456,8 @@ class GameController {
     }
     //Remove all placed classes from the gameFields
     this.view.clearShipClasses(this.view.gameBoard);
+    // Remove all ship images that have been appended
+    this.view.clearShipImgs();
     //Make all ship units visible again
     this.view.showShipUnits();
     //Play sound on reset
@@ -493,13 +492,16 @@ class GameController {
 }
 
 export { GameController };
-//Today: add individual ship img for every type, add function that provides corresponding img to ship type when placing the ship on the board, add rework rotation function for ship img, add rework placement function for npc ship placement, fixed dissapearing hit markers adjusted z-index and content:"""; and used the hitmarker as background instead, add setTimeOut to the toggleturn function basically delaying players turn, so that taunt message of npc has enough time to render complelty and is not overlapping with players taunt
+//Today: add individual ship img for every type, add function that provides corresponding img to ship type when placing the ship on the board, add rework rotation function for ship img, add rework placement function for npc ship placement, fixed dissapearing hit markers adjusted z-index and content:"""; and used the hitmarker as background instead, add setTimeOut to the toggleturn function basically delaying players turn, so that taunt message of npc has enough time to render complelty and is not overlapping with players taunt ===> committed
 
-// fix preview class needs to be removed after ship placement
+//second commit
+// Fixed highlight preview still showing after ship is placed, add remove shipImages method to remove the ships from the field when resetting, fixed when npc destroy player ship that it appears in enemy (npc) space, add setTimeout to won sound so no overallap with last explosion, fixed with new method that bot now only shots on fields if does not have a miss or hit class
+
+// check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement
 
 // fixes needed:
 // fix message not start again typing when reset => maybe set the p tag empty so it needs to render again
 // maybe add selected class to rotate,
-// add time out to winning sound,
-// clean up css classes placed and all ships,
 // i need rework resets because now I need to remove ships instead of classes
+// clean up css classes placed and all ships,
+// maybe add a better sunk explosion sound

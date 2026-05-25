@@ -4,6 +4,7 @@ import {
   antiHeroTaunts,
   getRandomNumber,
   lookUpShipImg,
+  getRandomCoord,
 } from "./helper.js";
 
 class GameView {
@@ -39,6 +40,7 @@ class GameView {
     this.gameStartBtn = document.querySelector(".btn-game-start");
     this.titleScreen = document.querySelector(".game-starting-screen");
     this.arcadeOverlay = document.querySelector(".arcade-overlay");
+    this.shipSprites = document.getElementsByClassName("ship-sprite");
   }
 
   hideShipUnits(selectedShip) {
@@ -68,6 +70,7 @@ class GameView {
     img.style.position = "absolute";
     img.style.pointerEvents = "none";
     img.style.zIndex = "1";
+    img.classList.add("ship-sprite");
 
     if (axis === "X") {
       img.style.width = `${shipLength * 50}px`;
@@ -157,14 +160,15 @@ class GameView {
     for (let gameField of gameBoard.children) {
       gameField.classList.remove("placed");
       gameField.classList.remove("preview");
-      gameField.classList.remove("ship-unit-destroyer");
-      gameField.classList.remove("ship-unit-cruiser");
-      gameField.classList.remove("ship-unit-dreadnought");
-      gameField.classList.remove("ship-unit-corvette");
-      gameField.classList.remove("ship-unit-frigate");
       gameField.classList.remove("miss");
       gameField.classList.remove("hit");
     }
+  }
+
+  clearShipImgs() {
+    [...this.shipSprites].forEach((shipSprite) => {
+      shipSprite.remove();
+    });
   }
 
   renderGameBoard(gameBoard) {
@@ -215,16 +219,14 @@ class GameView {
     }
   }
 
-  // instead of human clicking on gameField (dataType is html element), this returns a random one
-  getRandomFieldNpc = () => {
-    for (const gameField of this.gameBoardNpc.children) {
-      console.log(gameField);
-    }
-  };
+  // instead of human clicking on gameField (dataType is html element), this returns a random one delete
+  // getRandomFieldNpc = () => {
+  //   for (const gameField of this.gameBoardNpc.children) {
+  //     console.log(gameField);
+  //   }
+  // };
 
   renderBattleMessage(playerTurn, action) {
-    console.log(playerTurn);
-    console.log(action);
     if (playerTurn) {
       new Typewriter(".player-narrator-message-battle", {
         strings:
@@ -317,6 +319,20 @@ class GameView {
       field.classList.remove("overlapping");
       field.classList.remove("outOfBound");
     });
+  }
+
+  getRandomFieldClickNpcTest() {
+    let miss = true;
+    let hit = true;
+    let field = null;
+    let coord = null;
+    while (miss || hit) {
+      coord = getRandomCoord();
+      field = document.querySelector(`[data-coords="${coord}"]`);
+      miss = field.classList.contains("miss");
+      hit = field.classList.contains("hit");
+    }
+    return { field, coord };
   }
 
   getRandomFieldClickNpc(randomCoord, gameBoard) {

@@ -1,64 +1,67 @@
-// npcAttack() {
-//     console.log("npc turn");
-//     // True to start first while loop, when player misses then gets reassigned depending on npc hits or misses
-//     let isHit = true;
-//     while (isHit) {
-//       const randomCoord = getRandomCoord();
-//       // instead of human clicking on gameField (dataType is html element), this returns a random one
-//       const randomShootingTargetField = this.view.getRandomFieldClickNpc(
-//         randomCoord,
-//         this.view.gameBoard,
-//       );
-//       isHit = this.processAttack(
-//         randomShootingTargetField,
-//         randomCoord,
-//         this.gameBoard.fleetPlayer1,
-//       );
-//     }
-//     // After miss shot, next players turn
-//     console.log(this.gameBoard.fleetPlayer1);
-//     this.toggleTurn();
-//   }
+initializeNpcShipPlacements() {
+    // call the function initializeNpcShipPlacements
+    // creates ships, which are substitutes for players html element ships, also reduce complexity
+    const npcShipList = [
+      new Ship(5, "dreadnought", "placeholderPosition", "placeholderAxis"),
+      new Ship(4, "cruiser", "placeholderPosition", "placeholderAxis"),
+      new Ship(3, "destroyer", "placeholderPosition", "placeholderAxis"),
+      new Ship(3, "frigate", "placeholderPosition", "placeholderAxis"),
+      new Ship(2, "corvette", "placeholderPosition", "placeholderAxis"),
+    ];
+    // Do this for every ship
+    npcShipList.forEach((ship) => {
+      let isOverLapping = true;
+      let isOutOfBound = true;
+      let randomShipAxis = null;
+      let selectedShipCoords = null;
+      while (isOverLapping || isOutOfBound) {
+        // Gets a random coord like A3 , should run only per ship not for every gameField, thats why placed here
+        const randomCoord = getRandomCoord();
+        // instead of human clicking on gameField (dataType is html element), this returns a random one
+        const randomField = this.view.getRandomFieldClickNpc(
+          randomCoord,
+          this.view.gameBoardNpc,
+        );
+        const shipLength = ship.length;
+        // Calls the helper function to get random Axis
+        randomShipAxis = getRandomShipAxis();
 
-//    shootNpcShip(event) {
-//     // Makes sure that player only can shot, when it is his turn
-//     if (!this.playerTurn) return;
-//     // delete later
-//     console.log("player turn");
-//     const shootingTargetField = event.target.closest(".gameboard-field");
-//     // Returns if field is undefined, clicked between lines
-//     if (!shootingTargetField) return;
-//     // Makes sure if player hit a ship field that it can not be targeted again
-//     if (
-//       shootingTargetField.classList.contains("hit") ||
-//       shootingTargetField.classList.contains("miss")
-//     )
-//       return;
-//     // Gets the coordinate from target
-//     const targetCoord = shootingTargetField.dataset.coords;
-//     const isHit = this.processAttack(
-//       shootingTargetField,
-//       targetCoord,
-//       this.gameBoard.fleetNpc,
-//     );
-//     console.log(isHit);
+        // console.log(randomField);
+        // Gets the position of the ship (coordinates as array)
+        selectedShipCoords = this.gameBoard.getTempShipCoords(
+          randomField,
+          shipLength,
+          randomShipAxis,
+        );
 
-//     if (!isHit) {
-//       this.toggleTurn();
-//       // after switching to npc he can attack, use timeout to have delay between player shot and npc shot
-//       setTimeout(() => {
-//         this.npcAttack();
-//       }, 2000);
-//     }
-//   }
+        // console.log(selectedShipCoords);
+        //Set currentFields to the current occupied html elements
+        this.view.setTargetFields(selectedShipCoords, this.view.gameBoardNpc);
+        // Checks if ship isOverlapping
+        isOverLapping = this.view.isOverLapping(this.gameBoard.fleetNpc);
+        // Checks if ship outOfBound
+        isOutOfBound = this.view.isOutOfBound();
+      }
 
-//      this.view.testtrtrtrdddfdfsdssdsds("We lost the battle, Captain. Better luck on the next voyage.");
+      // I think can removed also because no ship function delete
+      // UI - Places ship
+      this.view.currentTargetFields.forEach((field) => {
+        if (!field) return;
+        // Lookup correct ship class, to color field in the ship color
+        const shipTypeClass = lookUpShipType(ship.type);
+        // replace later one with other class, because should be hidden and only visible on hit
+        // field.classList.add("placed", shipTypeClass);
+        //testing
+        field.classList.add("placed");
+      });
 
-//         for (let i = 1; i <= 100; i++) {
-//       gameBoard.insertAdjacentHTML(
-//         "beforeend",
-//         `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}">${getCoordinatesLetters(i)}-${getCoordinatesNumbers(i)}</div>`,
-//       );
-//     }
+      // Data: Update ship with coordinates and axis
+      ship.position = selectedShipCoords;
+      ship.axis = randomShipAxis;
 
-this.view.rotateBtn.textContent = `Rotate Ship (${this.shipAxis === "Y" ? "X" : "Y"})`;
+      // Push the updated ship into the fleet array
+      this.gameBoard.fleetNpc.push(ship);
+    }); // end of ship for each currently
+    console.log(this.gameBoard.fleetNpc);
+    // console.log(this.view.currentTargetFields);
+  }
