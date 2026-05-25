@@ -1,42 +1,123 @@
-<!DOCTYPE html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=battleship.2de5a084.css><script type=module src=battleship.81330433.js></script><title>Battleships</title><body>
-    <div class=game-frame-center>
+<!DOCTYPE html><html lang=en><script type=importmap>{"imports":{"1kYTv":"./frigate-spaceship.94dead6e.png","4MJsg":"./dreadnought-spaceship.5bae9fb1.png","7PMus":"./sunk-ship.577a0909.mp3","8SBCk":"./game-won.bde1a08f.mp3","8yYLW":"./destroyer-spaceship.778cfcc8.png","a3Row":"./cruiser-spaceship.d2e8c3e4.png","b02N5":"./menu.1cbd5120.mp3","b0SBw":"./title-screen.edf5bb1f.mp3","diOZ0":"./miss-ship.700d02db.mp3","gD7p0":"./insert-coin.c53d1daf.mp3","gyErV":"./select-ship.81bf0f2c.mp3","hFrtc":"./corvette-spaceship.c6f7dbe5.png","kBqG5":"./hit-ship.e5403e03.mp3","l31Xc":"./game-lost.91bc6ccd.mp3","lOUaT":"./deploy-ship.19e7982d.mp3"}}</script><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=battleship.1d210c0b.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel=stylesheet><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel=stylesheet><script type=module src=battleship.afef55f7.js></script><title>STARGRID</title><body>
+    <div class=arcade-overlay>
+      <p class=btn-insert-coin>Insert Coin To Play</p>
+    </div>
+    <div class=game-starting-screen>
+      <button class=btn-game-start>Start Game</button>
+    </div>
+    <div class="game-frame-center hidden">
       <div class=game-narrator>
-        <div>image placeholder</div>
-        <p>Hi</p>
+        <div class=narrator-img-container>
+          <img class=narrator-img src=player_narrator.da162c6b.png alt="anime captain woman">
+        </div>
+        <p class=narrator-message>
+          Click a ship to select it, click a map tile to place it, and use the
+          Rotate button to change its orientation before placement.
+        </p>
       </div>
-      <div class=gameboard-frame>
-        <div class=game-x-axis>
-          <div class=legend-numbers>1</div>
-          <div class=legend-numbers>2</div>
+      <div class=gameboards-container>
+        <div class=player-side>
+          <h2 class="hidden player-side-title">Friendly Space</h2>
+          <div class=gameboard-frame-player>
+            <div class=game-x-axis-player></div>
+            <div class=game-y-axis-player></div>
+            <main id=gameboard-player></main>
+
+            <div class=ship-container>
+              <button class=ship data-ship-length=5 data-ship-type=dreadnought data-ship-direction=X data-ship-sprite="img placeholder">
+                <p class=ship-unit-name>Dreadnought</p>
+                <div class=ship-unit-container>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <div class="ship-unit ship-unit-dreadnought"></div>
+                </div>
+              </button>
+              <button class=ship data-ship-length=4 data-ship-type=cruiser data-ship-direction=X data-ship-sprite="img placeholder">
+                <p class=ship-unit-name>Cruiser</p>
+                <div class=ship-unit-container>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <div class="ship-unit ship-unit-cruiser"></div>
+                </div>
+              </button>
+              <button class=ship data-ship-length=3 data-ship-type=destroyer data-ship-direction=X data-ship-sprite="img placeholder">
+                <p class=ship-unit-name>Destroyer</p>
+                <div class=ship-unit-container>
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                  <div class="ship-unit ship-unit-destroyer"></div>
+                </div>
+              </button>
+              <button class=ship data-ship-length=3 data-ship-type=frigate data-ship-direction=X data-ship-sprite="img placeholder">
+                <p class=ship-unit-name>Frigate</p>
+                <div class=ship-unit-container>
+                  <div class="ship-unit ship-unit-frigate"></div>
+                  <div class="ship-unit ship-unit-frigate"></div>
+                  <div class="ship-unit ship-unit-frigate"></div>
+                </div>
+              </button>
+              <button class=ship data-ship-length=2 data-ship-type=corvette data-ship-direction=X data-ship-sprite="img placeholder">
+                <p class=ship-unit-name>Corvette</p>
+                <div class=ship-unit-container>
+                  <div class="ship-unit ship-unit-corvette"></div>
+                  <div class="ship-unit ship-unit-corvette"></div>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div class="hidden player-narrator">
+            <div class=narrator-img-container>
+              <img class=narrator-img src=player_narrator.da162c6b.png alt="anime captain woman">
+            </div>
+            <p class="player-narrator-message player-narrator-message-battle">
+              Here to save the universe!
+            </p>
+          </div>
         </div>
-        <div class=game-y-axis>
-          <div class=legend-letters>A</div>
-          <div class=legend-letters>B</div>
-        </div>
-        <main id=gameboard></main>
-        <div class=ship-container>
-          <button class=ship data-ship-length=5 data-ship-type=carrier data-ship-direction=horizontal data-ship-sprite="img placeholder">
-            <p>Carrier - 5f</p>
-          </button>
-          <button class=ship data-ship-length=4 data-ship-type=battleship data-ship-direction=horizontal data-ship-sprite="img placeholder">
-            Battleship - 4f
-          </button>
-          <button class=ship data-ship-length=3 data-ship-type=cruiser data-ship-direction=horizontal data-ship-sprite="img placeholder">
-            Cruiser - 3f
-          </button>
-          <button class=ship data-ship-length=3 data-ship-type=submarine data-ship-direction=horizontal data-ship-sprite="img placeholder">
-            Submarine - 3f
-          </button>
-          <button class=ship data-ship-length=2 data-ship-type=destroyer data-ship-direction=horizontal data-ship-sprite="img placeholder">
-            Destroyer - 2f
-          </button>
+        <div class="hidden npc-side">
+          <h2 class=npc-side-title>Enemy Space</h2>
+          <div class="gameboard-frame-npc hidden">
+            <div class=game-x-axis-npc></div>
+            <div class=game-y-axis-npc></div>
+            <main id=gameboard-npc></main>
+          </div>
+          <div class="hidden npc-narrator">
+            <p class="npc-narrator-message npc-narrator-message-battle">
+              Muahaha I will destroy your planet.
+            </p>
+            <div class=narrator-img-container>
+              <img class=npc-narrator-img src=npc_narrator.4b0ecfcd.png alt="anime captain woman">
+            </div>
+          </div>
         </div>
       </div>
       <div class=game-menu>
-        <button class=btn-reset>Reset</button>
-        <button>Start</button>
-        <button class=btn-rotate>Rotate Ship to Y</button>
+        <button class=btn-reset>
+          <span class=material-icons>fast_rewind</span>
+          Reset
+        </button>
+        <button class=btn-start>
+          <span class=material-icons>play_arrow</span>
+          Start
+        </button>
+        <button class=btn-rotate>
+          <span class=material-icons>rotate_left</span>
+          Rotate Ship
+        </button>
       </div>
     </div>
+    <dialog id=dialog>
+      <p class=announcement-winner></p>
+      <div class=narrator-img-container>
+        <img class=narrator-img src=player_narrator.da162c6b.png alt="anime captain woman">
+      </div>
+      <p class=game-over-message></p>
+      <button class=btn-reset-game commandfor=dialog command=close>
+        New Battle
+      </button>
+    </dialog>
   
 
