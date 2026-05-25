@@ -371,14 +371,6 @@ body {
 .ship-unit-dreadnought {
   background-color: rgba(40, 10, 60, 0.92);
   border: 0.5px solid #b478ff;
-
-  /* content: url("./public/miss-marker.png");
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px; */
 }
 
 .placed.ship-unit-dreadnought {
@@ -599,33 +591,41 @@ body {
 }
 
 .hit {
-  /* background-color: #ff3333 !important;
-  box-shadow: 0 0 6px 2px rgba(255, 51, 51, 0.5); */
 }
 
 .hit::before {
-  content: url("./public/hit-marker.png");
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  background-image: url("./public/hit-marker.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 20; /* always above the ship img */
+  pointer-events: none;
 }
 
 .miss {
-  /* background-color: #4488aa !important;
-  box-shadow: 0 0 6px 2px rgba(68, 136, 170, 0.4); */
 }
 
 .miss::before {
-  content: url("./public/miss-marker.png");
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  background-image: url("./public/miss-marker.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 20; /* always above the ship img */
+  pointer-events: none;
 }
 
 /* Dialog  */

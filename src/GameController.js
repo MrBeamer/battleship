@@ -133,8 +133,19 @@ class GameController {
         if (isShipSunk) {
           console.log("ship is sunk");
           // Get ship type to display correct sunk ship
-          const shipType = lookUpShipType(hitShip.type);
-          this.view.displaySunkNpcShip(hitShip, shipType);
+          //   const shipType = lookUpShipType(hitShip.type);
+          const firstCoord = hitShip.position[0]; // needs to a field
+          const shipType = hitShip.type;
+          const shipAxis = hitShip.axis;
+          const shipLength = hitShip.length;
+          //   this.view.displaySunkNpcShip(hitShip, shipType);
+          //   this.view.placeShipImg(firstField, shipLength, shipAxis, shipType);
+          this.view.displaySunkNpcShip(
+            firstCoord,
+            shipLength,
+            shipAxis,
+            shipType,
+          );
           playSound("sunk-ship");
         }
 
@@ -201,7 +212,11 @@ class GameController {
     );
     // After miss shot, next players turn
     console.log(this.gameBoard.fleetPlayer1);
-    this.toggleTurn();
+    // Text message should not overlap if players turn is delayed it should be fixed
+    setTimeout(() => {
+      this.toggleTurn();
+    }, 1600);
+    // this.toggleTurn();
   }
 
   /////////////////////////////////////
@@ -249,6 +264,8 @@ class GameController {
         // Checks if ship outOfBound
         isOutOfBound = this.view.isOutOfBound();
       }
+
+      // I think can removed also because no ship function delete
       // UI - Places ship
       this.view.currentTargetFields.forEach((field) => {
         if (!field) return;
@@ -285,7 +302,10 @@ class GameController {
   rotateShip(event) {
     const rotateBtn = event.target.closest(".btn-rotate");
     if (!rotateBtn) return;
+    // Makes sure that you picked a ship before you rotate
+    if (!this.selectedShip) return;
     this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
+    this.selectedShip.dataset.shipDirection = this.shipAxis;
     // Control Sound
     playSound("menu");
   }
@@ -318,14 +338,25 @@ class GameController {
     const isOutOfBound = this.view.isOutOfBound();
     if (isOutOfBound) return;
 
+    ///
+    const startField = this.view.currentTargetFields[0];
+    if (!startField) return;
+    const shipLength = this.selectedShip.dataset.shipLength;
+    const shipAxis = this.selectedShip.dataset.shipDirection;
+    const shipType = this.selectedShip.dataset.shipType;
+    this.view.placeShipImg(startField, shipLength, shipAxis, shipType);
+    playSound("deploy-ship");
+
+    ///
+    /// I think i can remove the function below because it adds only classes to color the divs not any coordinates
     // Get currentTargetFields (html elements) and add highlight them permanently
-    this.view.currentTargetFields.forEach((field) => {
-      if (!field) return;
-      // Lookup correct ship class, to color field in the ship color
-      const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
-      field.classList.add("placed", shipTypeClass);
-      playSound("deploy-ship");
-    });
+    // this.view.currentTargetFields.forEach((field) => {
+    //   if (!field) return;
+    //   // Lookup correct ship class, to color field in the ship color
+    //   const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
+    //   field.classList.add("placed", shipTypeClass);
+    //   playSound("deploy-ship");
+    // });
 
     // If a ship is selected create an ship object and push into the fleetPlayer1 array
     if (!this.selectedShip) return;
@@ -462,17 +493,13 @@ class GameController {
 }
 
 export { GameController };
-// Today Goal: add random rendering messages when ship fires, add guard clause music loaded before game start,update all ship colors, reworked layout battle phase, Add coin sound to arcade screen, Add npc ships are hidden and only appear when sunk, Add custom hit and mis marker png assets with css before
+//Today: add individual ship img for every type, add function that provides corresponding img to ship type when placing the ship on the board, add rework rotation function for ship img, add rework placement function for npc ship placement, fixed dissapearing hit markers adjusted z-index and content:"""; and used the hitmarker as background instead, add setTimeOut to the toggleturn function basically delaying players turn, so that taunt message of npc has enough time to render complelty and is not overlapping with players taunt
 
-// Tomorrow
-// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again, fix that if you click to fast shooting on the next ship both narrator can talk, add ship skins
+// fix preview class needs to be removed after ship placement
 
-//nice to have i could add with before or after css ship skins
-// example
-// .local-link::before {
-//   content: url("/shared-assets/images/examples/firefox-logo.svg");
-//   display: inline-block;
-//   width: 15px;
-//   height: 15px;
-//   margin-right: 5px;
-// }
+// fixes needed:
+// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again
+// maybe add selected class to rotate,
+// add time out to winning sound,
+// clean up css classes placed and all ships,
+// i need rework resets because now I need to remove ships instead of classes

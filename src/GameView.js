@@ -1,5 +1,10 @@
 import Typewriter from "typewriter-effect/dist/core";
-import { villainTaunts, antiHeroTaunts, getRandomNumber } from "./helper.js";
+import {
+  villainTaunts,
+  antiHeroTaunts,
+  getRandomNumber,
+  lookUpShipImg,
+} from "./helper.js";
 
 class GameView {
   currentTargetFields = [];
@@ -40,18 +45,55 @@ class GameView {
     selectedShip.querySelector(".ship-unit-container").style.visibility =
       "hidden";
   }
+  //delete
+  // displaySunkNpcShip(ship, shipTypeClass) {
+  //   // position array of cords
+  //   console.log(ship);
+  //   console.log(ship.position);
+  //   ship.position.forEach((coord) => {
+  //     for (let field of this.gameBoardNpc.children) {
+  //       if (field.dataset.coords == coord) {
+  //         field.classList.add("placed", shipTypeClass);
+  //       }
+  //     }
+  //   });
+  // }
 
-  displaySunkNpcShip(ship, shipTypeClass) {
-    // position array of cords
-    console.log(ship);
-    console.log(ship.position);
-    ship.position.forEach((coord) => {
-      for (let field of this.gameBoardNpc.children) {
-        if (field.dataset.coords == coord) {
-          field.classList.add("placed", shipTypeClass);
-        }
+  // Based on different parameters of selected ship, add the correct ship img on the board
+  placeShipImg(startField, shipLength, axis, shipType) {
+    const img = document.createElement("img");
+    // Look up for the img url
+    const shipImg = lookUpShipImg(shipType);
+    img.src = shipImg;
+    img.style.position = "absolute";
+    img.style.pointerEvents = "none";
+    img.style.zIndex = "1";
+
+    if (axis === "X") {
+      img.style.width = `${shipLength * 50}px`;
+      img.style.height = "50px";
+      img.style.top = "0";
+      img.style.left = "0";
+    } else {
+      // Keep natural width/height, rotate 90deg, reposition
+      img.style.width = `${shipLength * 50}px`;
+      img.style.height = "50px";
+      img.style.transformOrigin = "top left";
+      img.style.transform = "rotate(90deg)";
+      img.style.top = "0";
+      img.style.left = "50px"; // shift right by one cell width to compensate pivot
+    }
+
+    startField.style.position = "relative";
+    startField.appendChild(img);
+  }
+
+  displaySunkNpcShip(firstCoord, shipLength, shipAxis, shipType) {
+    for (let field of this.gameBoardNpc.children) {
+      if (field.dataset.coords == firstCoord) {
+        this.placeShipImg(field, shipLength, shipAxis, shipType);
       }
-    });
+    }
   }
 
   renderBattleScreen() {
@@ -110,6 +152,7 @@ class GameView {
     this.gameOverMessage.textContent = message;
   }
 
+  // i think i can remove this but i need to remove the ships
   clearShipClasses(gameBoard) {
     for (let gameField of gameBoard.children) {
       gameField.classList.remove("placed");

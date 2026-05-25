@@ -151,6 +151,20 @@ const antiHeroTaunts = {
   ],
 };
 
+const lookUpShipImg = (shipType) => {
+  const lookUp = {
+    dreadnought: new URL("./public/dreadnought-spaceship.png", import.meta.url)
+      .href,
+    cruiser: new URL("./public/cruiser-spaceship.png", import.meta.url).href,
+    destroyer: new URL("./public/destroyer-spaceship.png", import.meta.url)
+      .href,
+    frigate: new URL("./public/frigate-spaceship.png", import.meta.url).href,
+    corvette: new URL("./public/corvette-spaceship.png", import.meta.url).href,
+  };
+
+  return lookUp[shipType];
+};
+
 export {
   getRandomShipAxis,
   getRandomCoord,
@@ -159,4 +173,5 @@ export {
   antiHeroTaunts,
   villainTaunts,
   getRandomNumber,
+  lookUpShipImg,
 };
