@@ -302,6 +302,14 @@ body {
   border: 2px solid oklch(0.82 0.22 145);
 }
 
+.btn-start:disabled {
+  background-color: oklch(0.23 0.015 95);
+  color: oklch(0.38 0.02 95);
+  border: 2px solid oklch(0.3 0.015 95);
+
+  cursor: not-allowed;
+}
+
 .btn-rotate {
   font-size: 12px;
   display: flex;
@@ -313,6 +321,10 @@ body {
   background-color: oklch(0.24 0.07 200);
   border: 2px solid oklch(0.85 0.15 200);
   color: oklch(0.85 0.15 200);
+}
+
+.btn-rotate-icon {
+  margin-left: 6px;
 }
 
 .btn-reset-game {
@@ -368,54 +380,17 @@ body {
   height: 12px;
 }
 
-.ship-unit-dreadnought {
-  background-color: rgba(40, 10, 60, 0.92);
-  border: 0.5px solid #b478ff;
+.ship-unit-length {
+  font-size: 8px;
+  color: #ff9f1c;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 5px;
 }
 
-.placed.ship-unit-dreadnought {
-  background-color: rgba(40, 10, 60, 0.92);
-  border: 0.5px solid #b478ff;
-}
-
-.ship-unit-cruiser {
-  background-color: rgba(0, 35, 50, 0.92);
-  border: 0.5px solid #00ccdd;
-}
-
-.placed.ship-unit-cruiser {
-  background-color: rgba(0, 35, 50, 0.92);
-  border: 0.5px solid #00ccdd;
-}
-
-.ship-unit-destroyer {
-  background-color: rgba(0, 40, 25, 0.92);
-  border: 0.5px solid #3effa0;
-}
-
-.placed.ship-unit-destroyer {
-  background-color: rgba(0, 40, 25, 0.92);
-  border: 0.5px solid#3effa0;
-}
-
-.ship-unit-frigate {
-  background-color: rgba(50, 10, 40, 0.92);
-  border: 0.5px solid #ff5cc8;
-}
-
-.placed.ship-unit-frigate {
-  background-color: rgba(50, 10, 40, 0.92);
-  border: 0.5px solid #ff5cc8;
-}
-
-.ship-unit-corvette {
-  background-color: rgba(40, 40, 0, 0.92);
-  border: 0.5px solid #ffe566;
-}
-
-.placed.ship-unit-corvette {
-  background-color: rgba(40, 40, 0, 0.92);
-  border: 0.5px solid #ffe566;
+.ship-sprite,
+.ship-unit-sprite {
+  width: 100px;
 }
 
 /* Shp States */
@@ -437,12 +412,12 @@ body {
 
 .ship:disabled {
   background-color: transparent;
-  color: transparent;
+  /* color: transparent; */
 }
 
 .ship:disabled:hover {
   background-color: transparent;
-  color: transparent;
+  /* color: transparent; */
 }
 
 .ship-srpite {

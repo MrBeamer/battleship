@@ -18,6 +18,7 @@ class GameView {
     this.resetBtn = document.querySelector(".btn-reset");
     this.gameMenu = document.querySelector(".game-menu");
     this.rotateBtn = document.querySelector(".btn-rotate");
+    this.rotateBtnIcon = document.querySelector(".btn-rotate-icon");
     this.startBtn = document.querySelector(".btn-start");
     this.gameAxisY = document.querySelector(".game-y-axis-player");
     this.gameAxisX = document.querySelector(".game-x-axis-player");
@@ -44,22 +45,16 @@ class GameView {
   }
 
   hideShipUnits(selectedShip) {
-    selectedShip.querySelector(".ship-unit-container").style.visibility =
-      "hidden";
+    selectedShip.querySelector(
+      ".ship-unit-container .ship-unit-sprite",
+    ).style.visibility = "hidden";
   }
-  //delete
-  // displaySunkNpcShip(ship, shipTypeClass) {
-  //   // position array of cords
-  //   console.log(ship);
-  //   console.log(ship.position);
-  //   ship.position.forEach((coord) => {
-  //     for (let field of this.gameBoardNpc.children) {
-  //       if (field.dataset.coords == coord) {
-  //         field.classList.add("placed", shipTypeClass);
-  //       }
-  //     }
-  //   });
-  // }
+
+  showShipUnits() {
+    document.querySelectorAll(".ship-unit-sprite").forEach((shipSprite) => {
+      shipSprite.style.visibility = "visible";
+    });
+  }
 
   // Based on different parameters of selected ship, add the correct ship img on the board
   placeShipImg(startField, shipLength, axis, shipType) {
@@ -78,13 +73,13 @@ class GameView {
       img.style.top = "0";
       img.style.left = "0";
     } else {
-      // Keep natural width/height, rotate 90deg, reposition
+      // Keep width/height, rotate 90deg, reposition
       img.style.width = `${shipLength * 50}px`;
       img.style.height = "50px";
       img.style.transformOrigin = "top left";
       img.style.transform = "rotate(90deg)";
       img.style.top = "0";
-      img.style.left = "50px"; // shift right by one cell width to compensate pivot
+      img.style.left = "50px";
     }
 
     startField.style.position = "relative";
@@ -97,6 +92,11 @@ class GameView {
         this.placeShipImg(field, shipLength, shipAxis, shipType);
       }
     }
+  }
+
+  renderRotateBtnIcon(shipAxis) {
+    this.rotateBtnIcon.textContent =
+      shipAxis === "Y" ? "arrow_downward" : "arrow_forward";
   }
 
   renderBattleScreen() {
@@ -141,12 +141,6 @@ class GameView {
     this.gameBoardsContainer.classList.remove("align-boards");
   }
 
-  showShipUnits() {
-    for (let ship of this.shipContainer.children) {
-      ship.querySelector(".ship-unit-container").style.visibility = "visible";
-    }
-  }
-
   renderWinnerAnnouncement(winner) {
     this.winnerAnnouncement.textContent = winner;
   }
@@ -172,6 +166,12 @@ class GameView {
   }
 
   renderGameBoard(gameBoard) {
+    const gameBoardLength = gameBoard.children.length;
+    console.log(gameBoardLength);
+    //Makes sure board gets only initially rendered not on every reset
+    if (gameBoardLength > 0) return;
+    console.log("important:");
+    console.log(gameBoard);
     // Get ID from gameBoard conditionally rendering the axis for npc or player
     const gameBoardId = gameBoard.id;
     //Renders the Y axis of the gameBoard
@@ -217,14 +217,8 @@ class GameView {
         `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}"></div>`,
       );
     }
+    console.log(gameBoardLength);
   }
-
-  // instead of human clicking on gameField (dataType is html element), this returns a random one delete
-  // getRandomFieldNpc = () => {
-  //   for (const gameField of this.gameBoardNpc.children) {
-  //     console.log(gameField);
-  //   }
-  // };
 
   renderBattleMessage(playerTurn, action) {
     if (playerTurn) {
@@ -251,16 +245,6 @@ class GameView {
   }
 
   renderNarratorMessage() {
-    // const test = new Typewriter(".narrator-message", {
-    //   strings: [
-    //     "Hi Captain Pengu!",
-    //     "Click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
-    //   ],
-    //   autoStart: true,
-    //   loop: false,
-    //   delay: 40,
-    // });
-
     new Typewriter(".narrator-message", {
       strings:
         "Captain, click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",

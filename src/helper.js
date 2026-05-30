@@ -16,18 +16,6 @@ const getRandomCoord = () => {
   return randomField;
 };
 
-const lookUpShipType = (shipType) => {
-  const lookUp = {
-    dreadnought: "ship-unit-dreadnought",
-    cruiser: "ship-unit-cruiser",
-    destroyer: "ship-unit-destroyer",
-    frigate: "ship-unit-frigate",
-    corvette: "ship-unit-corvette",
-  };
-
-  return lookUp[shipType];
-};
-
 const playSound = async (soundName) => {
   const soundFiles = {
     "deploy-ship": new URL("./assets/sounds/deploy-ship.mp3", import.meta.url),
@@ -168,7 +156,6 @@ const lookUpShipImg = (shipType) => {
 export {
   getRandomShipAxis,
   getRandomCoord,
-  lookUpShipType,
   playSound,
   antiHeroTaunts,
   villainTaunts,

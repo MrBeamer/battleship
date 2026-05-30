@@ -21,8 +21,6 @@ class Gameboard {
         coords = coordY + coordX;
       }
       tempShipCoords.push(coords);
-      // console.log(`Coord Y: ${coordY}`);
-      // console.log(`Coord X: ${coordX}`);
     }
     return tempShipCoords;
   }

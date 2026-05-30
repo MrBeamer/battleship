@@ -3,7 +3,6 @@ import { GameView } from "./GameView.js";
 import { Ship } from "./Ship.js";
 import { getRandomShipAxis } from "./helper.js";
 import { getRandomCoord } from "./helper.js";
-import { lookUpShipType } from "./helper.js";
 import { playSound } from "./helper.js";
 
 class GameController {
@@ -159,6 +158,7 @@ class GameController {
   }
 
   shootNpcShip(event) {
+    console.log("check if events triggers at all");
     // Makes sure shooting is not possible when game is over
     if (this.isGameOver) return;
     // Makes sure that player only can shot, when it is his turn
@@ -263,11 +263,7 @@ class GameController {
       // UI - Places ship
       this.view.currentTargetFields.forEach((field) => {
         if (!field) return;
-        // Lookup correct ship class, to color field in the ship color
-        const shipTypeClass = lookUpShipType(ship.type);
-        // replace later one with other class, because should be hidden and only visible on hit
-        // field.classList.add("placed", shipTypeClass);
-        //testing
+        // remove after debug - delete
         field.classList.add("placed");
       });
 
@@ -298,7 +294,11 @@ class GameController {
     if (!rotateBtn) return;
     // Makes sure that you picked a ship before you rotate
     if (!this.selectedShip) return;
+    // toggle
     this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
+    // Render correct icon for direction
+    this.view.renderRotateBtnIcon(this.shipAxis);
+    // Set the data attribute to the switched direction
     this.selectedShip.dataset.shipDirection = this.shipAxis;
     // Control Sound
     playSound("menu");
@@ -324,6 +324,8 @@ class GameController {
   handlePlaceShip(event) {
     const gameField = event.target.closest(".gameboard-field");
     if (!gameField) return;
+    //makes sure that you cant place ships after 5 are placed - reset game fix
+    if (this.gameBoard.fleetPlayer1.length === 5) return;
 
     // Checks if ship would overlap
     const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
@@ -345,20 +347,7 @@ class GameController {
     this.view.placeShipImg(startField, shipLength, shipAxis, shipType);
     playSound("deploy-ship");
 
-    ///
-    /// I think i can remove the function below because it adds only classes to color the divs not any coordinates
-    // Get currentTargetFields (html elements) and add highlight them permanently
-    // this.view.currentTargetFields.forEach((field) => {
-    //   if (!field) return;
-    //   // Lookup correct ship class, to color field in the ship color
-    //   const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
-    //   field.classList.add("placed", shipTypeClass);
-    //   playSound("deploy-ship");
-    // });
-
-    // If a ship is selected create an ship object and push into the fleetPlayer1 array
     if (!this.selectedShip) return;
-
     // Based on placed ship, create a new ship object.
     const ship = new Ship(
       this.selectedShip.dataset.shipLength,
@@ -368,7 +357,6 @@ class GameController {
     );
     // Add ship to gameBoard (fleetPlayer1 array) - data
     this.gameBoard.placeShip(ship);
-    console.log(this.gameBoard.fleetPlayer1);
     // If ship is placed on the board, disable the ship button, so user can not pick it again
     this.selectedShip.disabled = true;
     //Hide ship unit
@@ -381,6 +369,8 @@ class GameController {
     this.selectedShipPosition = null;
     // After placing ship, remove fields from the temp memory state
     this.view.currentTargetFields = [];
+    // While player has not 5 ships placed, do not remove disabled, from start btn
+    this.view.startBtn.disabled = this.gameBoard.fleetPlayer1.length < 5;
   }
 
   handlePointeOver(event) {
@@ -398,7 +388,6 @@ class GameController {
     );
     this.selectedShipPosition = selectedShipCoords;
     // Gets the hoovered or locked in html of the fields
-    // I think returning targetfields can be removed and maybe rename the function to set instead of get?
     this.view.setTargetFields(selectedShipCoords, this.view.gameBoard);
     // Check if any ships is about to overlap or outOfBound, if so return true
     const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
@@ -412,7 +401,6 @@ class GameController {
     this.view.clearFieldHighlights();
   }
 
-  ///////////////////////////////////
   insertCoin() {
     //replace this with the helper later
     const playTitleMusic = async () => {
@@ -460,6 +448,8 @@ class GameController {
     this.view.clearShipImgs();
     //Make all ship units visible again
     this.view.showShipUnits();
+    // Add disabled after reset
+    this.view.startBtn.disabled = true;
     //Play sound on reset
     playSound("menu");
   }
@@ -469,15 +459,17 @@ class GameController {
     this.resetShipPlacement();
     // Resets battle phase npc side
     this.view.clearShipClasses(this.view.gameBoardNpc);
-    console.log("reset game");
     //Re render the ship placement screen
     this.view.renderShipPlacementScreen();
     // Reset the npc fleet
     this.gameBoard.fleetNpc = [];
     console.log(this.gameBoard.fleetNpc);
+    // Reactivate addEventListeners
+    this.isGameOver = false;
+    // Resets players turn
+    this.playerTurn = true;
     //Play sound on reset
-    const clickSound = new Audio("path/to/sound.mp3");
-    clickSound.play();
+    playSound("menu");
   }
 
   startPreparation() {
@@ -492,16 +484,11 @@ class GameController {
 }
 
 export { GameController };
-//Today: add individual ship img for every type, add function that provides corresponding img to ship type when placing the ship on the board, add rework rotation function for ship img, add rework placement function for npc ship placement, fixed dissapearing hit markers adjusted z-index and content:"""; and used the hitmarker as background instead, add setTimeOut to the toggleturn function basically delaying players turn, so that taunt message of npc has enough time to render complelty and is not overlapping with players taunt ===> committed
 
-//second commit
-// Fixed highlight preview still showing after ship is placed, add remove shipImages method to remove the ships from the field when resetting, fixed when npc destroy player ship that it appears in enemy (npc) space, add setTimeout to won sound so no overallap with last explosion, fixed with new method that bot now only shots on fields if does not have a miss or hit class
-
-// check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement
+// Add arrow to rotate button see orientation after click, add disabled to start button until all ships are placed, Add images of the actual ships to the selection screen, general code cleanup, to ship placement screen how much cells a ship takes, fixed on full game reset and placement it resets not ship sprites, start button is now also after game reset back to inital disabled state, fixed npc game board rendering twice after game reset, fixed that you could click after gamee reset in friendly spaces and it would throw an error
 
 // fixes needed:
-// fix message not start again typing when reset => maybe set the p tag empty so it needs to render again
-// maybe add selected class to rotate,
-// i need rework resets because now I need to remove ships instead of classes
+// fix random explosion where no ship is on players field when npc shot,
 // clean up css classes placed and all ships,
-// maybe add a better sunk explosion sound
+// remove place class from bot ships
+// check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement
