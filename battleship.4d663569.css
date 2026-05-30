@@ -261,6 +261,13 @@ body {
   display: flex;
 }
 
+.btn-start:disabled {
+  color: oklch(38% .02 95);
+  cursor: not-allowed;
+  background-color: oklch(23% .015 95);
+  border: 2px solid oklch(30% .015 95);
+}
+
 .btn-rotate {
   cursor: pointer;
   color: oklch(85% .15 200);
@@ -271,6 +278,10 @@ body {
   padding: 10px 25px;
   font-size: 12px;
   display: flex;
+}
+
+.btn-rotate-icon {
+  margin-left: 6px;
 }
 
 .btn-reset-game {
@@ -322,29 +333,16 @@ body {
   height: 12px;
 }
 
-.ship-unit-dreadnought, .placed.ship-unit-dreadnought {
-  background-color: #280a3ceb;
-  border: .5px solid #b478ff;
+.ship-unit-length {
+  color: #ff9f1c;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  font-size: 8px;
 }
 
-.ship-unit-cruiser, .placed.ship-unit-cruiser {
-  background-color: #002332eb;
-  border: .5px solid #0cd;
-}
-
-.ship-unit-destroyer, .placed.ship-unit-destroyer {
-  background-color: #002819eb;
-  border: .5px solid #3effa0;
-}
-
-.ship-unit-frigate, .placed.ship-unit-frigate {
-  background-color: #320a28eb;
-  border: .5px solid #ff5cc8;
-}
-
-.ship-unit-corvette, .placed.ship-unit-corvette {
-  background-color: #282800eb;
-  border: .5px solid #ffe566;
+.ship-sprite, .ship-unit-sprite {
+  width: 100px;
 }
 
 .ship:hover {
@@ -362,7 +360,6 @@ body {
 }
 
 .ship:disabled, .ship:disabled:hover {
-  color: #0000;
   background-color: #0000;
 }
 

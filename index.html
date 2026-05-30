@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=en><script type=importmap>{"imports":{"1kYTv":"./frigate-spaceship.94dead6e.png","4MJsg":"./dreadnought-spaceship.5bae9fb1.png","7PMus":"./sunk-ship.577a0909.mp3","8SBCk":"./game-won.bde1a08f.mp3","8yYLW":"./destroyer-spaceship.778cfcc8.png","a3Row":"./cruiser-spaceship.d2e8c3e4.png","b02N5":"./menu.1cbd5120.mp3","b0SBw":"./title-screen.edf5bb1f.mp3","diOZ0":"./miss-ship.700d02db.mp3","gD7p0":"./insert-coin.c53d1daf.mp3","gyErV":"./select-ship.81bf0f2c.mp3","hFrtc":"./corvette-spaceship.c6f7dbe5.png","kBqG5":"./hit-ship.e5403e03.mp3","l31Xc":"./game-lost.91bc6ccd.mp3","lOUaT":"./deploy-ship.19e7982d.mp3"}}</script><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=battleship.1d210c0b.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel=stylesheet><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel=stylesheet><script type=module src=battleship.afef55f7.js></script><title>STARGRID</title><body>
+<!DOCTYPE html><html lang=en><script type=importmap>{"imports":{"1kYTv":"./frigate-spaceship.94dead6e.png","4MJsg":"./dreadnought-spaceship.5bae9fb1.png","7PMus":"./sunk-ship.577a0909.mp3","8SBCk":"./game-won.bde1a08f.mp3","8yYLW":"./destroyer-spaceship.778cfcc8.png","a3Row":"./cruiser-spaceship.d2e8c3e4.png","b02N5":"./menu.1cbd5120.mp3","b0SBw":"./title-screen.edf5bb1f.mp3","diOZ0":"./miss-ship.700d02db.mp3","gD7p0":"./insert-coin.c53d1daf.mp3","gyErV":"./select-ship.81bf0f2c.mp3","hFrtc":"./corvette-spaceship.c6f7dbe5.png","kBqG5":"./hit-ship.e5403e03.mp3","l31Xc":"./game-lost.91bc6ccd.mp3","lOUaT":"./deploy-ship.19e7982d.mp3"}}</script><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><link rel=stylesheet href=battleship.d2a1a320.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel=stylesheet><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel=stylesheet><script type=module src=battleship.55e6faff.js></script><title>STARGRID</title><body>
     <div class=arcade-overlay>
       <p class=btn-insert-coin>Insert Coin To Play</p>
     </div>
@@ -24,46 +24,39 @@
             <main id=gameboard-player></main>
 
             <div class=ship-container>
-              <button class=ship data-ship-length=5 data-ship-type=dreadnought data-ship-direction=X data-ship-sprite="img placeholder">
+              <button class=ship data-ship-length=5 data-ship-type=dreadnought data-ship-direction=X>
                 <p class=ship-unit-name>Dreadnought</p>
+                <p class=ship-unit-length>▣ ▣ ▣ ▣ ▣</p>
                 <div class=ship-unit-container>
-                  <div class="ship-unit ship-unit-dreadnought"></div>
-                  <div class="ship-unit ship-unit-dreadnought"></div>
-                  <div class="ship-unit ship-unit-dreadnought"></div>
-                  <div class="ship-unit ship-unit-dreadnought"></div>
-                  <div class="ship-unit ship-unit-dreadnought"></div>
+                  <img class=ship-unit-sprite src=dreadnought-spaceship.5bae9fb1.png alt=Dreadnought>
                 </div>
               </button>
-              <button class=ship data-ship-length=4 data-ship-type=cruiser data-ship-direction=X data-ship-sprite="img placeholder">
+              <button class=ship data-ship-length=4 data-ship-type=cruiser data-ship-direction=X>
                 <p class=ship-unit-name>Cruiser</p>
+                <p class=ship-unit-length>▣ ▣ ▣ ▣</p>
                 <div class=ship-unit-container>
-                  <div class="ship-unit ship-unit-cruiser"></div>
-                  <div class="ship-unit ship-unit-cruiser"></div>
-                  <div class="ship-unit ship-unit-cruiser"></div>
-                  <div class="ship-unit ship-unit-cruiser"></div>
+                  <img class=ship-unit-sprite src=cruiser-spaceship.d2e8c3e4.png alt=Cruiser>
                 </div>
               </button>
-              <button class=ship data-ship-length=3 data-ship-type=destroyer data-ship-direction=X data-ship-sprite="img placeholder">
+              <button class=ship data-ship-length=3 data-ship-type=destroyer data-ship-direction=X>
                 <p class=ship-unit-name>Destroyer</p>
+                <p class=ship-unit-length>▣ ▣ ▣</p>
                 <div class=ship-unit-container>
-                  <div class="ship-unit ship-unit-destroyer"></div>
-                  <div class="ship-unit ship-unit-destroyer"></div>
-                  <div class="ship-unit ship-unit-destroyer"></div>
+                  <img class=ship-unit-sprite src=destroyer-spaceship.778cfcc8.png alt=Destroyer>
                 </div>
               </button>
-              <button class=ship data-ship-length=3 data-ship-type=frigate data-ship-direction=X data-ship-sprite="img placeholder">
+              <button class=ship data-ship-length=3 data-ship-type=frigate data-ship-direction=X>
                 <p class=ship-unit-name>Frigate</p>
+                <p class=ship-unit-length>▣ ▣ ▣</p>
                 <div class=ship-unit-container>
-                  <div class="ship-unit ship-unit-frigate"></div>
-                  <div class="ship-unit ship-unit-frigate"></div>
-                  <div class="ship-unit ship-unit-frigate"></div>
+                  <img class=ship-unit-sprite src=frigate-spaceship.94dead6e.png alt=Frigate>
                 </div>
               </button>
-              <button class=ship data-ship-length=2 data-ship-type=corvette data-ship-direction=X data-ship-sprite="img placeholder">
+              <button class=ship data-ship-length=2 data-ship-type=corvette data-ship-direction=X>
                 <p class=ship-unit-name>Corvette</p>
+                <p class=ship-unit-length>▣ ▣</p>
                 <div class=ship-unit-container>
-                  <div class="ship-unit ship-unit-corvette"></div>
-                  <div class="ship-unit ship-unit-corvette"></div>
+                  <img class=ship-unit-sprite src=corvette-spaceship.c6f7dbe5.png alt=Corvette>
                 </div>
               </button>
             </div>
@@ -99,13 +92,13 @@
           <span class=material-icons>fast_rewind</span>
           Reset
         </button>
-        <button class=btn-start>
+        <button class=btn-start disabled>
           <span class=material-icons>play_arrow</span>
           Start
         </button>
         <button class=btn-rotate>
-          <span class=material-icons>rotate_left</span>
           Rotate Ship
+          <span class="btn-rotate-icon material-icons">arrow_forward</span>
         </button>
       </div>
     </div>

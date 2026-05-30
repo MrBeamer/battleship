@@ -721,16 +721,12 @@ game.init();
 },{"./GameController.js":"IrhHB"}],"IrhHB":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "GameController", ()=>GameController) //Today: add individual ship img for every type, add function that provides corresponding img to ship type when placing the ship on the board, add rework rotation function for ship img, add rework placement function for npc ship placement, fixed dissapearing hit markers adjusted z-index and content:"""; and used the hitmarker as background instead, add setTimeOut to the toggleturn function basically delaying players turn, so that taunt message of npc has enough time to render complelty and is not overlapping with players taunt ===> committed
- //second commit
- // Fixed highlight preview still showing after ship is placed, add remove shipImages method to remove the ships from the field when resetting, fixed when npc destroy player ship that it appears in enemy (npc) space, add setTimeout to won sound so no overallap with last explosion, fixed with new method that bot now only shots on fields if does not have a miss or hit class
- // check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement
+parcelHelpers.export(exports, "GameController", ()=>GameController) // Add arrow to rotate button see orientation after click, add disabled to start button until all ships are placed, Add images of the actual ships to the selection screen, general code cleanup, to ship placement screen how much cells a ship takes, fixed on full game reset and placement it resets not ship sprites, start button is now also after game reset back to inital disabled state, fixed npc game board rendering twice after game reset, fixed that you could click after gamee reset in friendly spaces and it would throw an error
  // fixes needed:
- // fix message not start again typing when reset => maybe set the p tag empty so it needs to render again
- // maybe add selected class to rotate,
- // i need rework resets because now I need to remove ships instead of classes
+ // fix random explosion where no ship is on players field when npc shot,
  // clean up css classes placed and all ships,
- // maybe add a better sunk explosion sound
+ // remove place class from bot ships
+ // check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement
 ;
 var _gameboardJs = require("./Gameboard.js");
 var _gameViewJs = require("./GameView.js");
@@ -854,6 +850,7 @@ class GameController {
         return hit;
     }
     shootNpcShip(event) {
+        console.log("check if events triggers at all");
         // Makes sure shooting is not possible when game is over
         if (this.isGameOver) return;
         // Makes sure that player only can shot, when it is his turn
@@ -933,11 +930,7 @@ class GameController {
             // UI - Places ship
             this.view.currentTargetFields.forEach((field)=>{
                 if (!field) return;
-                // Lookup correct ship class, to color field in the ship color
-                const shipTypeClass = (0, _helperJs.lookUpShipType)(ship.type);
-                // replace later one with other class, because should be hidden and only visible on hit
-                // field.classList.add("placed", shipTypeClass);
-                //testing
+                // remove after debug - delete
                 field.classList.add("placed");
             });
             // Data: Update ship with coordinates and axis
@@ -964,7 +957,11 @@ class GameController {
         if (!rotateBtn) return;
         // Makes sure that you picked a ship before you rotate
         if (!this.selectedShip) return;
+        // toggle
         this.shipAxis = this.shipAxis === "X" ? "Y" : "X";
+        // Render correct icon for direction
+        this.view.renderRotateBtnIcon(this.shipAxis);
+        // Set the data attribute to the switched direction
         this.selectedShip.dataset.shipDirection = this.shipAxis;
         // Control Sound
         (0, _helperJs.playSound)("menu");
@@ -984,6 +981,8 @@ class GameController {
     handlePlaceShip(event) {
         const gameField = event.target.closest(".gameboard-field");
         if (!gameField) return;
+        //makes sure that you cant place ships after 5 are placed - reset game fix
+        if (this.gameBoard.fleetPlayer1.length === 5) return;
         // Checks if ship would overlap
         const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
         if (isOverLapping) return;
@@ -1001,23 +1000,11 @@ class GameController {
         // Place ship img on field
         this.view.placeShipImg(startField, shipLength, shipAxis, shipType);
         (0, _helperJs.playSound)("deploy-ship");
-        ///
-        /// I think i can remove the function below because it adds only classes to color the divs not any coordinates
-        // Get currentTargetFields (html elements) and add highlight them permanently
-        // this.view.currentTargetFields.forEach((field) => {
-        //   if (!field) return;
-        //   // Lookup correct ship class, to color field in the ship color
-        //   const shipTypeClass = lookUpShipType(this.selectedShip.dataset.shipType);
-        //   field.classList.add("placed", shipTypeClass);
-        //   playSound("deploy-ship");
-        // });
-        // If a ship is selected create an ship object and push into the fleetPlayer1 array
         if (!this.selectedShip) return;
         // Based on placed ship, create a new ship object.
         const ship = new (0, _shipJs.Ship)(this.selectedShip.dataset.shipLength, this.selectedShip.dataset.shipType, this.selectedShipPosition, this.shipAxis);
         // Add ship to gameBoard (fleetPlayer1 array) - data
         this.gameBoard.placeShip(ship);
-        console.log(this.gameBoard.fleetPlayer1);
         // If ship is placed on the board, disable the ship button, so user can not pick it again
         this.selectedShip.disabled = true;
         //Hide ship unit
@@ -1030,6 +1017,8 @@ class GameController {
         this.selectedShipPosition = null;
         // After placing ship, remove fields from the temp memory state
         this.view.currentTargetFields = [];
+        // While player has not 5 ships placed, do not remove disabled, from start btn
+        this.view.startBtn.disabled = this.gameBoard.fleetPlayer1.length < 5;
     }
     handlePointeOver(event) {
         //highlight fields only if ship has been picked
@@ -1041,7 +1030,6 @@ class GameController {
         const selectedShipCoords = this.gameBoard.getTempShipCoords(gameField, this.selectedShip.dataset.shipLength, this.shipAxis);
         this.selectedShipPosition = selectedShipCoords;
         // Gets the hoovered or locked in html of the fields
-        // I think returning targetfields can be removed and maybe rename the function to set instead of get?
         this.view.setTargetFields(selectedShipCoords, this.view.gameBoard);
         // Check if any ships is about to overlap or outOfBound, if so return true
         const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
@@ -1053,7 +1041,6 @@ class GameController {
         // Remove class preview that highlights divs for ship placement
         this.view.clearFieldHighlights();
     }
-    ///////////////////////////////////
     insertCoin() {
         //replace this with the helper later
         const playTitleMusic = async ()=>{
@@ -1091,6 +1078,8 @@ class GameController {
         this.view.clearShipImgs();
         //Make all ship units visible again
         this.view.showShipUnits();
+        // Add disabled after reset
+        this.view.startBtn.disabled = true;
         //Play sound on reset
         (0, _helperJs.playSound)("menu");
     }
@@ -1099,15 +1088,17 @@ class GameController {
         this.resetShipPlacement();
         // Resets battle phase npc side
         this.view.clearShipClasses(this.view.gameBoardNpc);
-        console.log("reset game");
         //Re render the ship placement screen
         this.view.renderShipPlacementScreen();
         // Reset the npc fleet
         this.gameBoard.fleetNpc = [];
         console.log(this.gameBoard.fleetNpc);
+        // Reactivate addEventListeners
+        this.isGameOver = false;
+        // Resets players turn
+        this.playerTurn = true;
         //Play sound on reset
-        const clickSound = new Audio("path/to/sound.mp3");
-        clickSound.play();
+        (0, _helperJs.playSound)("menu");
     }
     startPreparation() {
         // Make sure music is loaded before you can start the game
@@ -1147,8 +1138,6 @@ class Gameboard {
                 coords = coordY + coordX;
             }
             tempShipCoords.push(coords);
-        // console.log(`Coord Y: ${coordY}`);
-        // console.log(`Coord X: ${coordX}`);
         }
         return tempShipCoords;
     }
@@ -1205,6 +1194,7 @@ class GameView {
         this.resetBtn = document.querySelector(".btn-reset");
         this.gameMenu = document.querySelector(".game-menu");
         this.rotateBtn = document.querySelector(".btn-rotate");
+        this.rotateBtnIcon = document.querySelector(".btn-rotate-icon");
         this.startBtn = document.querySelector(".btn-start");
         this.gameAxisY = document.querySelector(".game-y-axis-player");
         this.gameAxisX = document.querySelector(".game-x-axis-player");
@@ -1230,21 +1220,13 @@ class GameView {
         this.shipSprites = document.getElementsByClassName("ship-sprite");
     }
     hideShipUnits(selectedShip) {
-        selectedShip.querySelector(".ship-unit-container").style.visibility = "hidden";
+        selectedShip.querySelector(".ship-unit-container .ship-unit-sprite").style.visibility = "hidden";
     }
-    //delete
-    // displaySunkNpcShip(ship, shipTypeClass) {
-    //   // position array of cords
-    //   console.log(ship);
-    //   console.log(ship.position);
-    //   ship.position.forEach((coord) => {
-    //     for (let field of this.gameBoardNpc.children) {
-    //       if (field.dataset.coords == coord) {
-    //         field.classList.add("placed", shipTypeClass);
-    //       }
-    //     }
-    //   });
-    // }
+    showShipUnits() {
+        document.querySelectorAll(".ship-unit-sprite").forEach((shipSprite)=>{
+            shipSprite.style.visibility = "visible";
+        });
+    }
     // Based on different parameters of selected ship, add the correct ship img on the board
     placeShipImg(startField, shipLength, axis, shipType) {
         const img = document.createElement("img");
@@ -1261,19 +1243,22 @@ class GameView {
             img.style.top = "0";
             img.style.left = "0";
         } else {
-            // Keep natural width/height, rotate 90deg, reposition
+            // Keep width/height, rotate 90deg, reposition
             img.style.width = `${shipLength * 50}px`;
             img.style.height = "50px";
             img.style.transformOrigin = "top left";
             img.style.transform = "rotate(90deg)";
             img.style.top = "0";
-            img.style.left = "50px"; // shift right by one cell width to compensate pivot
+            img.style.left = "50px";
         }
         startField.style.position = "relative";
         startField.appendChild(img);
     }
     displaySunkNpcShip(firstCoord, shipLength, shipAxis, shipType) {
         for (let field of this.gameBoardNpc.children)if (field.dataset.coords == firstCoord) this.placeShipImg(field, shipLength, shipAxis, shipType);
+    }
+    renderRotateBtnIcon(shipAxis) {
+        this.rotateBtnIcon.textContent = shipAxis === "Y" ? "arrow_downward" : "arrow_forward";
     }
     renderBattleScreen() {
         //Hide html elements from preparation screen
@@ -1315,9 +1300,6 @@ class GameView {
         // Remove align-boards to align the boards
         this.gameBoardsContainer.classList.remove("align-boards");
     }
-    showShipUnits() {
-        for (let ship of this.shipContainer.children)ship.querySelector(".ship-unit-container").style.visibility = "visible";
-    }
     renderWinnerAnnouncement(winner) {
         this.winnerAnnouncement.textContent = winner;
     }
@@ -1341,6 +1323,12 @@ class GameView {
         });
     }
     renderGameBoard(gameBoard) {
+        const gameBoardLength = gameBoard.children.length;
+        console.log(gameBoardLength);
+        //Makes sure board gets only initially rendered not on every reset
+        if (gameBoardLength > 0) return;
+        console.log("important:");
+        console.log(gameBoard);
         // Get ID from gameBoard conditionally rendering the axis for npc or player
         const gameBoardId = gameBoard.id;
         //Renders the Y axis of the gameBoard
@@ -1412,13 +1400,8 @@ class GameView {
         };
         // Injects the created fields into the GameBoard Container
         for(let i = 1; i <= 100; i++)gameBoard.insertAdjacentHTML("beforeend", `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}"></div>`);
+        console.log(gameBoardLength);
     }
-    // instead of human clicking on gameField (dataType is html element), this returns a random one delete
-    // getRandomFieldNpc = () => {
-    //   for (const gameField of this.gameBoardNpc.children) {
-    //     console.log(gameField);
-    //   }
-    // };
     renderBattleMessage(playerTurn, action) {
         if (playerTurn) new (0, _coreDefault.default)(".player-narrator-message-battle", {
             strings: action === "hit" ? (0, _helperJs.antiHeroTaunts).hit[(0, _helperJs.getRandomNumber)((0, _helperJs.antiHeroTaunts).hit.length)] : (0, _helperJs.antiHeroTaunts).miss[(0, _helperJs.getRandomNumber)((0, _helperJs.antiHeroTaunts).miss.length)],
@@ -1434,15 +1417,6 @@ class GameView {
         });
     }
     renderNarratorMessage() {
-        // const test = new Typewriter(".narrator-message", {
-        //   strings: [
-        //     "Hi Captain Pengu!",
-        //     "Click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
-        //   ],
-        //   autoStart: true,
-        //   loop: false,
-        //   delay: 40,
-        // });
         new (0, _coreDefault.default)(".narrator-message", {
             strings: "Captain, click a ship to select it, click a map tile to place it, and use the Rotate button to change its orientation before placement.",
             autoStart: true,
@@ -1970,7 +1944,6 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "getRandomShipAxis", ()=>getRandomShipAxis);
 parcelHelpers.export(exports, "getRandomCoord", ()=>getRandomCoord);
-parcelHelpers.export(exports, "lookUpShipType", ()=>lookUpShipType);
 parcelHelpers.export(exports, "playSound", ()=>playSound);
 parcelHelpers.export(exports, "antiHeroTaunts", ()=>antiHeroTaunts);
 parcelHelpers.export(exports, "villainTaunts", ()=>villainTaunts);
@@ -2012,16 +1985,6 @@ const getRandomCoord = ()=>{
     const randomLetter = letters[Math.floor(Math.random() * letters.length)];
     const randomField = randomLetter + randomNumber;
     return randomField;
-};
-const lookUpShipType = (shipType)=>{
-    const lookUp = {
-        dreadnought: "ship-unit-dreadnought",
-        cruiser: "ship-unit-cruiser",
-        destroyer: "ship-unit-destroyer",
-        frigate: "ship-unit-frigate",
-        corvette: "ship-unit-corvette"
-    };
-    return lookUp[shipType];
 };
 const playSound = async (soundName)=>{
     const soundFiles = {
