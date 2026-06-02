@@ -167,16 +167,12 @@ class GameView {
 
   renderGameBoard(gameBoard) {
     const gameBoardLength = gameBoard.children.length;
-    console.log(gameBoardLength);
     //Makes sure board gets only initially rendered not on every reset
     if (gameBoardLength > 0) return;
-    console.log("important:");
-    console.log(gameBoard);
     // Get ID from gameBoard conditionally rendering the axis for npc or player
     const gameBoardId = gameBoard.id;
     //Renders the Y axis of the gameBoard
     const renderAxisY = () => {
-      console.log(gameBoardId);
       const alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
       const axisY =
         gameBoardId === "gameboard-player" ? this.gameAxisY : this.gameAxisYnpc;
@@ -217,7 +213,6 @@ class GameView {
         `<div class="gameboard-field" data-coord-x="${getCoordinatesNumbers(i)}" data-coord-y="${getCoordinatesLetters(i)}" data-coords="${getCoordinatesLetters(i)}${getCoordinatesNumbers(i)}"></div>`,
       );
     }
-    console.log(gameBoardLength);
   }
 
   renderBattleMessage(playerTurn, action) {
@@ -258,7 +253,6 @@ class GameView {
     // Searches the correct divs based on ships coordinates
     const targetFields = targetShipCoords.map((coord) => {
       for (const field of gameBoard.children) {
-        // console.log(field.dataset.coords);
         if (field.dataset.coords === coord) {
           return field;
         }
@@ -322,6 +316,12 @@ class GameView {
   getRandomFieldClickNpc(randomCoord, gameBoard) {
     for (const gameField of gameBoard.children) {
       if (gameField.dataset.coords === randomCoord) return gameField;
+    }
+  }
+
+  removeDisabledFromShipSelection() {
+    for (let ship of this.shipContainer.children) {
+      ship.disabled = false;
     }
   }
 }

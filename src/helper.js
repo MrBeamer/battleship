@@ -41,6 +41,7 @@ const playSound = async (soundName) => {
   } catch (err) {
     console.error("Audio playback failed:", err);
   }
+  return sound;
 };
 
 const villainTaunts = {

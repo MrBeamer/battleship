@@ -10,13 +10,11 @@ class GameController {
   gameBoard = new Gameboard();
   selectedShip = null;
   selectedShipPosition = null;
-  shipPlacementPhase = null; // maybe not used
   shipAxis = "X";
-  shipNavigationState = null; // maybe not used
-  gamePhase = "preparation"; // maybe not used
   playerTurn = true;
   isGameOver = false;
   titleScreenMusic = null;
+  gameSound = null;
   constructor() {
     // Title screen start game
     this.view.gameStartBtn.addEventListener("click", (event) => {
@@ -127,7 +125,6 @@ class GameController {
         // Checks after every hit if ship is sunk
         const isShipSunk = hitShip.isSunk();
         if (isShipSunk) {
-          console.log("ship is sunk");
           const firstCoord = hitShip.position[0]; // needs to a field
           const shipType = hitShip.type;
           const shipAxis = hitShip.axis;
@@ -158,13 +155,11 @@ class GameController {
   }
 
   shootNpcShip(event) {
-    console.log("check if events triggers at all");
     // Makes sure shooting is not possible when game is over
     if (this.isGameOver) return;
     // Makes sure that player only can shot, when it is his turn
     if (!this.playerTurn) return;
     // delete later
-    console.log("player turn");
     const shootingTargetField = event.target.closest(".gameboard-field");
     // Returns if field is undefined, clicked between lines
     if (!shootingTargetField) return;
@@ -193,12 +188,10 @@ class GameController {
   npcAttack() {
     // Makes sure shooting is not possible when game is over
     if (this.isGameOver) return;
-    console.log("npc turn");
 
     // instead of human clicking on gameField (dataType is html element), this returns a random one
     ////////
     const randomElement = this.view.getRandomFieldClickNpcTest();
-    console.log(randomElement);
     ///
     this.processAttack(
       randomElement.field,
@@ -215,7 +208,6 @@ class GameController {
 
   /////////////////////////////////////
   initializeNpcShipPlacements() {
-    // call the function initializeNpcShipPlacements
     // creates ships, which are substitutes for players html element ships, also reduce complexity
     const npcShipList = [
       new Ship(5, "dreadnought", "placeholderPosition", "placeholderAxis"),
@@ -224,7 +216,7 @@ class GameController {
       new Ship(3, "frigate", "placeholderPosition", "placeholderAxis"),
       new Ship(2, "corvette", "placeholderPosition", "placeholderAxis"),
     ];
-    // Do this for every ship
+
     npcShipList.forEach((ship) => {
       let isOverLapping = true;
       let isOutOfBound = true;
@@ -242,7 +234,6 @@ class GameController {
         // Calls the helper function to get random Axis
         randomShipAxis = getRandomShipAxis();
 
-        // console.log(randomField);
         // Gets the position of the ship (coordinates as array)
         selectedShipCoords = this.gameBoard.getTempShipCoords(
           randomField,
@@ -250,7 +241,6 @@ class GameController {
           randomShipAxis,
         );
 
-        // console.log(selectedShipCoords);
         //Set currentFields to the current occupied html elements
         this.view.setTargetFields(selectedShipCoords, this.view.gameBoardNpc);
         // Checks if ship isOverlapping
@@ -259,26 +249,15 @@ class GameController {
         isOutOfBound = this.view.isOutOfBound();
       }
 
-      // I think can removed also because no ship function delete
-      // UI - Places ship
-      this.view.currentTargetFields.forEach((field) => {
-        if (!field) return;
-        // remove after debug - delete
-        field.classList.add("placed");
-      });
-
       // Data: Update ship with coordinates and axis
       ship.position = selectedShipCoords;
       ship.axis = randomShipAxis;
 
       // Push the updated ship into the fleet array
       this.gameBoard.fleetNpc.push(ship);
-    }); // end of ship for each currently
-    console.log(this.gameBoard.fleetNpc);
-    // console.log(this.view.currentTargetFields);
+    });
   }
 
-  /////////////////////////////////////
   startGame() {
     // Game can only start, if all ships are placed
     if (this.gameBoard.fleetPlayer1.length !== 5) return;
@@ -387,12 +366,12 @@ class GameController {
       this.shipAxis,
     );
     this.selectedShipPosition = selectedShipCoords;
-    // Gets the hoovered or locked in html of the fields
+    // Gets the hoovered, html of the fields
     this.view.setTargetFields(selectedShipCoords, this.view.gameBoard);
-    // Check if any ships is about to overlap or outOfBound, if so return true
+
     const isOverLapping = this.view.isOverLapping(this.gameBoard.fleetPlayer1);
     const isOutOfBound = this.view.isOutOfBound();
-    // Add class that highlights divs for potential ship placements
+
     this.view.highlightTargetFields(isOverLapping, isOutOfBound);
   }
 
@@ -401,27 +380,10 @@ class GameController {
     this.view.clearFieldHighlights();
   }
 
-  insertCoin() {
-    //replace this with the helper later
-    const playTitleMusic = async () => {
-      if (!this.titleScreenMusic) {
-        this.titleScreenMusic = new Audio(
-          new URL("./assets/sounds/title-screen.mp3", import.meta.url),
-        );
-
-        this.titleScreenMusic.loop = true;
-      }
-
-      try {
-        await this.titleScreenMusic.play();
-      } catch (error) {
-        console.warn("Playback failed:", error);
-      }
-    };
-
+  async insertCoin() {
     playSound("insert-coin");
-    setTimeout(() => {
-      playTitleMusic();
+    setTimeout(async () => {
+      this.gameSound = await playSound("title-screen");
     }, 1300);
 
     this.view.arcadeOverlay.classList.add("hidden");
@@ -439,9 +401,7 @@ class GameController {
     // remove the temp highlighted fields from the temp memory state
     this.view.currentTargetFields = [];
     //Remove disable from all ships
-    for (let ship of this.view.shipContainer.children) {
-      ship.disabled = false;
-    }
+    this.view.removeDisabledFromShipSelection();
     //Remove all placed classes from the gameFields
     this.view.clearShipClasses(this.view.gameBoard);
     // Remove all ship images that have been appended
@@ -463,10 +423,7 @@ class GameController {
     this.view.renderShipPlacementScreen();
     // Reset the npc fleet
     this.gameBoard.fleetNpc = [];
-    console.log(this.gameBoard.fleetNpc);
-    // Reactivate addEventListeners
     this.isGameOver = false;
-    // Resets players turn
     this.playerTurn = true;
     //Play sound on reset
     playSound("menu");
@@ -474,21 +431,13 @@ class GameController {
 
   startPreparation() {
     // Make sure music is loaded before you can start the game
-    if (!this.titleScreenMusic) return;
+    console.log(this.gameSound);
+    if (!this.gameSound) return;
     this.view.gameFrameCenter.classList.remove("hidden");
     this.view.titleScreen.classList.add("hidden");
-    //Type narrator message
     this.view.renderNarratorMessage();
-    this.titleScreenMusic.pause();
+    this.gameSound.pause();
   }
 }
 
 export { GameController };
-
-// Add arrow to rotate button see orientation after click, add disabled to start button until all ships are placed, Add images of the actual ships to the selection screen, general code cleanup, to ship placement screen how much cells a ship takes, fixed on full game reset and placement it resets not ship sprites, start button is now also after game reset back to inital disabled state, fixed npc game board rendering twice after game reset, fixed that you could click after gamee reset in friendly spaces and it would throw an error
-
-// fixes needed:
-// fix random explosion where no ship is on players field when npc shot,
-// clean up css classes placed and all ships,
-// remove place class from bot ships
-// check getRandomFieldClickNpcTest getRandomFieldClickNpc in the view fight version that works for npc attack and initial npc ship placement

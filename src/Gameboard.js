@@ -26,7 +26,6 @@ class Gameboard {
   }
 
   placeShip(ship) {
-    // add later logic if players 1 turn put into fleet1 and vice versa
     this.fleetPlayer1.push(ship);
   }
 }
