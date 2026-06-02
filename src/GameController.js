@@ -190,23 +190,18 @@ class GameController {
     if (this.isGameOver) return;
 
     // instead of human clicking on gameField (dataType is html element), this returns a random one
-    ////////
     const randomElement = this.view.getRandomFieldClickNpcTest();
-    ///
     this.processAttack(
       randomElement.field,
       randomElement.coord,
       this.gameBoard.fleetPlayer1,
     );
-    // After miss shot, next players turn
-    // Text message should not overlap if players turn is delayed it should be fixed
     setTimeout(() => {
       this.toggleTurn();
     }, 1600);
     // this.toggleTurn();
   }
 
-  /////////////////////////////////////
   initializeNpcShipPlacements() {
     // creates ships, which are substitutes for players html element ships, also reduce complexity
     const npcShipList = [
